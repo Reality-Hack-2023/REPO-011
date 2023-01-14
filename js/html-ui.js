@@ -187,7 +187,7 @@ transition: 0s
 `
 WL.registerComponent('html-ui', {
 }, {
-    start: function() {
+    init: function() {
         /* Add any HTML to the DOM here */
 
         const div = document.createElement('div');
