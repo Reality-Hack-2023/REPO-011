@@ -1,3 +1,5 @@
+import 'firestone-api.js';
+
 const HTMLCode = `
 <style>
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css');
@@ -152,15 +154,15 @@ h2 {
 
 <div class='button-container'>
   <div class='content'>
-      <button class="comment_button"><i class="fas fa-comment"></i></button>
+      <button class="comment_button" onclick="newComment()"><i class="fas fa-comment"></i></button>
   </div>
 
   <div class='content'>
-      <button class="comment_button"><i class="fas fa-heart"></i></button>
+      <button class="comment_button" onclick="newLikes()"><i class="fas fa-heart"></i></button>
   </div>
 
   <div class='content'>
-      <button class="comment_button"><i class="fas fa-pen"></i></button>
+      <button class="comment_button" onclick="newPost()"><i class="fas fa-pen"></i></button>
   </div>
 </div>
 `
