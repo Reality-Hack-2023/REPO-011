@@ -248,6 +248,75 @@
                     }
                 }
             ]
+        },
+        "70": {
+            "link": {
+                "name": "Sketchfab_model",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            }
+        },
+        "71": {
+            "link": {
+                "name": "root<Sketchfab_model",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            },
+            "parent": "70",
+            "translation": [
+                -1.4280891,
+                0.0,
+                0.0912194
+            ],
+            "rotation": [
+                -1.2107170377362308e-8,
+                -4.733400658096798e-7,
+                4.633355388250493e-8,
+                1.0
+            ],
+            "scale": [
+                0.9999944,
+                1.0,
+                1.0000033
+            ],
+            "components": [
+                {
+                    "type": "planetRotation"
+                }
+            ]
+        },
+        "72": {
+            "link": {
+                "name": "GLTF_SceneRootNode<root<Sketchfab_model",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            },
+            "parent": "71"
+        },
+        "73": {
+            "link": {
+                "name": "Clouds_1<GLTF_SceneRootNode<root<Sketchfab_model",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            },
+            "parent": "72"
+        },
+        "74": {
+            "link": {
+                "name": "Object_4<Clouds_1<GLTF_SceneRootNode<root<Sketchfab_model",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            },
+            "parent": "73"
+        },
+        "75": {
+            "link": {
+                "name": "Planet_2<GLTF_SceneRootNode<root<Sketchfab_model",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            },
+            "parent": "72"
+        },
+        "76": {
+            "link": {
+                "name": "Object_6<Planet_2<GLTF_SceneRootNode<root<Sketchfab_model",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            },
+            "parent": "75"
         }
     },
     "meshes": {
@@ -291,6 +360,18 @@
             "link": {
                 "name": "AR Target Mesh",
                 "file": "models\\ar-target.glb"
+            }
+        },
+        "68": {
+            "link": {
+                "name": "Object_0",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            }
+        },
+        "69": {
+            "link": {
+                "name": "Object_1",
+                "file": "assets\\stylized_planet\\scene.gltf"
             }
         }
     },
@@ -406,6 +487,18 @@
                     0.9999899,
                     1.0
                 ]
+            }
+        },
+        "66": {
+            "link": {
+                "name": "Clouds",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            }
+        },
+        "67": {
+            "link": {
+                "name": "Planet",
+                "file": "assets\\stylized_planet\\scene.gltf"
             }
         }
     },
@@ -567,7 +660,14 @@
             }
         }
     },
-    "animations": {},
+    "animations": {
+        "77": {
+            "link": {
+                "name": "Animation",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            }
+        }
+    },
     "skins": {},
     "pipelines": {
         "33": {
@@ -662,10 +762,37 @@
         }
     },
     "files": [
-        "models/ar-target.glb"
+        "models/ar-target.glb",
+        "assets/stylized_planet/scene.gltf"
     ],
-    "textures": {},
-    "images": {},
+    "textures": {
+        "64": {
+            "link": {
+                "name": "texture_0",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            }
+        },
+        "65": {
+            "link": {
+                "name": "texture_1",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            }
+        }
+    },
+    "images": {
+        "62": {
+            "link": {
+                "name": "image_0",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            }
+        },
+        "63": {
+            "link": {
+                "name": "image_1",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            }
+        }
+    },
     "fonts": {
         "59": {
             "link": {

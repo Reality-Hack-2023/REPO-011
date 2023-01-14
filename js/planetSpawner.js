@@ -1,4 +1,3 @@
-import { getPosts, newPost, newComment, newLikes } from "./firestore-api"
 var spheres = [];
 WL.registerComponent('planetSpawner', {
     mesh: {type: WL.Type.Mesh},
@@ -15,9 +14,10 @@ WL.registerComponent('planetSpawner', {
             newMesh.mesh = this.mesh;
             newMesh.material = this.material;
             if (spheres.length == 0)
-                newObj.transformWorld = this.object.transformWorld;
+                newObj.translateWorld = this.object.translateWorld;
             else
                 newObj.setTranslationWorld(glMatrix.vec3.add([], spheres[spheres.length-1].getTranslationWorld([]), [1.5, 0, 0]));
+            newObj.addComponent("planetRotation");
             spheres.push(newObj);
             console.log(newObj.transformLocal);
         })
