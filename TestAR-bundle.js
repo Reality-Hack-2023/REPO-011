@@ -14321,8 +14321,9 @@
     const postsList = postsSnapshot.docs.map((doc) => doc.data());
     return postsList;
   }
-  async function newPost(db2, text) {
+  async function newPost(db2, author, text) {
     const postRef = await Yr(Nn(db2, "posts"), {
+      author,
       text,
       likes: 0,
       comments: []
