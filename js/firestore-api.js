@@ -29,8 +29,9 @@ async function getPosts(db) {
   return postsList;
 }
 
-async function newPost(db, text){
+async function newPost(db, author, text){
   const postRef = await addDoc(collection(db, "posts"), {
+    author: author,
     text: text,
     likes: 0,
     comments: []
