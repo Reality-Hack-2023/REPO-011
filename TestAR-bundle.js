@@ -14310,6 +14310,7 @@
   // js/firestore-api.js
   var firestore_api_exports = {};
   __export(firestore_api_exports, {
+    db: () => db,
     getPosts: () => getPosts,
     newComment: () => newComment,
     newLikes: () => newLikes,
@@ -14558,6 +14559,7 @@ transition: 0s
 `;
       WL.registerComponent("html-ui", {}, {
         start: function() {
+          console.log("appending html");
           const div = document.createElement("div");
           div.style.position = "fixed";
           div.style.top = 0;
@@ -14572,11 +14574,51 @@ transition: 0s
     }
   });
 
+  // js/PostSpawner.js
+  var PostSpawner_exports = {};
+  var init_PostSpawner = __esm({
+    "js/PostSpawner.js"() {
+      init_firestore_api();
+      WL.registerComponent("PostSpawner", {
+        param: { type: WL.Type.Float, default: 1 }
+      }, {
+        init: function() {
+          console.log("init() with param", this.param);
+        },
+        start: function() {
+          console.log("start() with param", this.param);
+          getPosts(db).then(console.log);
+        },
+        update: function(dt2) {
+          console.log("update() with delta time", dt2);
+        }
+      });
+    }
+  });
+
+  // js/planetRotation.js
+  var require_planetRotation = __commonJS({
+    "js/planetRotation.js"() {
+      WL.registerComponent("planetRotation", {
+        param: { type: WL.Type.Float, default: 1 }
+      }, {
+        init: function() {
+          console.log("init() with param", this.param);
+        },
+        update: function(dt2) {
+          this.object.rotateAxisAngleDegObject([0, 1, 0], dt2 * 10);
+        }
+      });
+    }
+  });
+
   // js/bundle.js
   require_thwall_camera();
   require_components();
   init_firestore_api();
   require_html_ui();
+  init_PostSpawner();
+  require_planetRotation();
 })();
 /*! Bundled license information:
 
