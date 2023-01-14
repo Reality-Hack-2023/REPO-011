@@ -187,9 +187,9 @@ transition: 0s
 `
 WL.registerComponent('html-ui', {
 }, {
-    init: function() {
+    start: function() {
         /* Add any HTML to the DOM here */
-
+        console.log("appending html")
         const div = document.createElement('div');
         /* Overlap this div over the canvas and fill the screen */
         div.style.position = 'fixed';
