@@ -14310,7 +14310,6 @@
   // js/firestore-api.js
   var firestore_api_exports = {};
   __export(firestore_api_exports, {
-    db: () => db,
     getPosts: () => getPosts,
     newComment: () => newComment,
     newLikes: () => newLikes,
@@ -14320,7 +14319,7 @@
     const posts = Nn(db2, "posts");
     const postsSnapshot = await zr(posts);
     const postsList = postsSnapshot.docs.map((doc) => doc.data());
-    posts_list = postsList;
+    return postsList;
   }
   async function newPost(db2, author, text) {
     const postRef = await Yr(Nn(db2, "posts"), {
@@ -14346,7 +14345,7 @@
       likes: increment(1)
     });
   }
-  var firebaseConfig, app, db, posts_list;
+  var firebaseConfig, app, db;
   var init_firestore_api = __esm({
     "js/firestore-api.js"() {
       init_index_esm();
@@ -14363,252 +14362,6 @@
       };
       app = initializeApp(firebaseConfig);
       db = bn(app);
-      posts_list = null;
-    }
-  });
-
-  // js/html-ui.js
-  var require_html_ui = __commonJS({
-    "js/html-ui.js"() {
-      var HTMLCode = `
-<style>
-h2 {
-  color: white;
-}
-
-.button {
-  position: relative;
-  background-color: #4CAF50;
-  border: none;
-  font-size: 28px;
-  color: #FFFFFF;
-  padding: 20px;
-  width: 200px;
-  text-align: center;
-  transition-duration: 0.4s;
-  text-decoration: none;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.button:after {
-  content: "";
-  background: #f1f1f1;
-  display: block;
-  position: absolute;
-  padding-top: 300%;
-  padding-left: 350%;
-  margin-left: -20px !important;
-  margin-top: -120%;
-  opacity: 0;
-  transition: all 0.8s
-}
-
-.button:active:after {
-  padding: 0;
-  margin: 0;
-  opacity: 1;
-  transition: 0s
-}
-
-.comment_button {
-  position: relative;
-  border: none;
-  border-radius: 45px;
-  font-size: 12px; 
-  color: #000;
-  background-color: #fff;
-  padding: 21px 32px; 
-  width: 160px;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  font-weight: 400;
-  overflow: hidden;
-
-  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease 0s;
-  cursor: pointer; 
-  outline: none;
-} 
-
-
-.comment_button:after {
-content: "";
-position: absolute;
-padding-top: 300%;
-padding-left: 350%;
-margin-left: -20px !important;
-margin-top: -120%;
-opacity: 0;
-}
-
-.comment_button:active {
-  transform: translateY(-1px);
-  background-color: #bbb;
-}
-
-.comment_button:active:after {
-padding: 0;
-margin: 0;
-opacity: 1;
-transition: 0s
-}
-
-.like_button {
-  position: relative;
-  background-color: #EFAAC4;
-  border: none;
-  font-size: 12px;
-  color: #000;
-  padding: 20px 10px;
-  width: 70px;
-  text-align: center;
-  test-transform: uppercase; 
-  letter-spacing 3px:
-  font-weight: 500px; 
-  transition-duration: all 0.3s ease 0;
-  text-decoration: none;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.like_button:after {
-  content: "";
-  display: block;
-  position: absolute;
-  padding-top: 300%;
-  padding-left: 350%;
-  margin-left: -20px;
-  margin-top: -120%;
-  opacity: 0;
-  transition: all 0.8s
-}
-
-.like_button:active:after {
-  padding: 0;
-  margin: 0;
-  opacity: 1;
-  transform: translateY(-2px);
-}
-
-.post_button {
-  position: relative;
-  background-color: #96C0B7;
-  border: none;
-  font-size: 12px;
-  color: #000;
-  padding: 20px 10px;
-  width: 70px;
-  text-align: center;
-  test-transform: uppercase; 
-  letter-spacing 3px:
-  font-weight: 500px; 
-  transition-duration: all 0.3s ease 0;
-  text-decoration: none;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.post_button:after {
-  content: "";
-  display: block;
-  position: absolute;
-  padding-top: 300%;
-  padding-left: 350%;
-  margin-left: -20px;
-  margin-top: -120%;
-  opacity: 0;
-  transition: all 0.8s
-}
-
-.post_button:active:after {
-  padding: 0;
-  margin: 0;
-  opacity: 1;
-  transform: translateY(-2px);
-}
-
-.content {
-  padding: 10px;
-}
-
-/* We disable "pointer-events" on the parent, because it needs to
- * let through any events to the canvas. But for any direct children
- * of the content, we still want clicking/hovering etc */
-.content > * {
-  pointer-events: auto;
-}
-</style>
-
-<div class='content'>
-    <button class="button">Click Me</button>
-</div>
-
-<div class='content'>
-    <button class="comment_button">Comment</button>
-</div>
-
-<div class='content'>
-    <button class="comment_button">Like</button>
-</div>
-
-<div class='content'>
-    <button class="comment_button">Post</button>
-</div>
-`;
-      WL.registerComponent("html-ui", {}, {
-        start: function() {
-          console.log("appending html");
-          const div = document.createElement("div");
-          div.style.position = "fixed";
-          div.style.top = 0;
-          div.style.display = "box";
-          div.style.width = "100%";
-          div.style.height = "100%";
-          div.style.pointerEvents = "none";
-          div.innerHTML = HTMLCode;
-          document.body.appendChild(div);
-        }
-      });
-    }
-  });
-
-  // js/PostSpawner.js
-  var PostSpawner_exports = {};
-  var init_PostSpawner = __esm({
-    "js/PostSpawner.js"() {
-      init_firestore_api();
-      WL.registerComponent("PostSpawner", {
-        param: { type: WL.Type.Float, default: 1 }
-      }, {
-        init: function() {
-          console.log("init() with param", this.param);
-        },
-        start: function() {
-          console.log("start() with param", this.param);
-          getPosts(db).then(console.log);
-        },
-        update: function(dt2) {
-          console.log("update() with delta time", dt2);
-        }
-      });
-    }
-  });
-
-  // js/planetRotation.js
-  var require_planetRotation = __commonJS({
-    "js/planetRotation.js"() {
-      WL.registerComponent("planetRotation", {
-        param: { type: WL.Type.Float, default: 1 }
-      }, {
-        init: function() {
-          console.log("init() with param", this.param);
-        },
-        update: function(dt2) {
-          this.object.rotateAxisAngleDegObject([0, 1, 0], dt2 * 10);
-        }
-      });
     }
   });
 
@@ -14616,9 +14369,6 @@ transition: 0s
   require_thwall_camera();
   require_components();
   init_firestore_api();
-  require_html_ui();
-  init_PostSpawner();
-  require_planetRotation();
 })();
 /*! Bundled license information:
 
