@@ -253,7 +253,23 @@
             "link": {
                 "name": "Sketchfab_model",
                 "file": "assets\\stylized_planet\\scene.gltf"
-            }
+            },
+            "translation": [
+                -1.8209463,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                -0.6956252,
+                -0.0228982,
+                0.022194,
+                0.7176967
+            ],
+            "scale": [
+                0.9999949,
+                1.0,
+                0.9999949
+            ]
         },
         "71": {
             "link": {
@@ -274,7 +290,14 @@
                 "name": "Clouds_1<GLTF_SceneRootNode<root<Sketchfab_model",
                 "file": "assets\\stylized_planet\\scene.gltf"
             },
-            "parent": "72"
+            "parent": "72",
+            "components": [
+                {
+                    "animation": {
+                        "autoplay": true
+                    }
+                }
+            ]
         },
         "74": {
             "link": {
