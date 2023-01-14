@@ -20,13 +20,14 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+let posts_list = NULL
 
 // Get a list of cities from your database
 async function getPosts(db) {
   const posts = collection(db, 'posts');
   const postsSnapshot = await getDocs(posts);
   const postsList = postsSnapshot.docs.map(doc => doc.data());
-  return postsList;
+  posts_list = postsList;
 }
 
 async function newPost(db, author, text){
