@@ -1,3 +1,4 @@
+import { getPosts, newPost, newComment, newLikes } from "./firestore-api"
 var spheres = [];
 WL.registerComponent('planetSpawner', {
     mesh: {type: WL.Type.Mesh},
