@@ -44,10 +44,16 @@ async function newPost(db, text){
 
 async function newComment(db, postDoc, commentText){
   const posts = doc(db, `posts/${postDoc}`);
-  let postsSnapshot = await getDoc(posts);
-  const unionRes = await updateDoc(posts, {
+  await updateDoc(posts, {
     comments: arrayUnion(commentText)
   });
-  postsSnapshot = await getDoc(posts);
-  return postsSnapshot.get('comments')
 }
+
+async function newLikes(db, postDoc){
+  const posts = doc(db, `posts/${postDoc}`);
+  await updateDoc(posts, {
+    likes: increment(1)
+  });
+}
+
+export { getPosts, newPost, newComment, newLikes }

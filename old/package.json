@@ -1,0 +1,22 @@
+{
+  "name": "mitrealityhack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "esbuild ./js/bundle.js --minify --sourcemap --bundle --outfile=\"deploy/MyWonderland-bundle.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Reality-Hack-2023/REPO-011.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Reality-Hack-2023/REPO-011/issues"
+  },
+  "homepage": "https://github.com/Reality-Hack-2023/REPO-011#readme",
+  "devDependencies": {
+    "esbuild": "^0.17.0"
+  }
+}

@@ -64,9 +64,6 @@
                 },
                 {
                     "type": "mouse-look"
-                },
-                {
-                    "type": "8thwall-camera0"
                 }
             ]
         },
@@ -530,7 +527,7 @@
     },
     "settings": {
         "project": {
-            "name": "MyWonderland",
+            "name": "TestAR",
             "version": [
                 0,
                 9,
@@ -546,13 +543,11 @@
             "sourcePaths": [
                 "/js/editor-components-bundle.js",
                 "js/"
-            ]
+            ],
+            "useInternalBundler": false
         },
         "ar": {
-            "framework": "none",
-            "8thwall": {
-                "apiToken": "sU7eX52Oe2ZL8qUKBWD5naUlu1ZrnuRrtM1pQ7ukMz8rkOEG8mb63YlYTuiOrsQZTiXKRe"
-            }
+            "framework": "webxr"
         },
         "rendering": {
             "clearColor": [
@@ -564,9 +559,6 @@
             "bloom": {
                 "enabled": false
             }
-        },
-        "editor": {
-            "serverCOEP": "unsafe-none"
         }
     },
     "animations": {},
