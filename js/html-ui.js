@@ -1,42 +1,9 @@
 const HTMLCode = `
 <style>
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css');
+
 h2 {
   color: white;
-}
-
-.button {
-  position: relative;
-  background-color: #4CAF50;
-  border: none;
-  font-size: 28px;
-  color: #FFFFFF;
-  padding: 20px;
-  width: 200px;
-  text-align: center;
-  transition-duration: 0.4s;
-  text-decoration: none;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.button:after {
-  content: "";
-  background: #f1f1f1;
-  display: block;
-  position: absolute;
-  padding-top: 300%;
-  padding-left: 350%;
-  margin-left: -20px !important;
-  margin-top: -120%;
-  opacity: 0;
-  transition: all 0.8s
-}
-
-.button:active:after {
-  padding: 0;
-  margin: 0;
-  opacity: 1;
-  transition: 0s
 }
 
 .comment_button {
@@ -46,8 +13,8 @@ h2 {
   font-size: 12px; 
   color: #000;
   background-color: #fff;
-  padding: 21px 32px; 
-  width: 160px;
+  padding: 10px 21px; 
+  width: 60px;
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 3px;
@@ -62,25 +29,25 @@ h2 {
 
 
 .comment_button:after {
-content: "";
-position: absolute;
-padding-top: 300%;
-padding-left: 350%;
-margin-left: -20px !important;
-margin-top: -120%;
-opacity: 0;
+  content: "";
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px !important;
+  margin-top: -120%;
+  opacity: 0;
 }
 
 .comment_button:active {
-  transform: translateY(-1px);
+  transform: translateY(-3px);
   background-color: #bbb;
 }
 
 .comment_button:active:after {
-padding: 0;
-margin: 0;
-opacity: 1;
-transition: 0s
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
 }
 
 .like_button {
@@ -161,6 +128,20 @@ transition: 0s
   padding: 10px;
 }
 
+.center {
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
 /* We disable "pointer-events" on the parent, because it needs to
  * let through any events to the canvas. But for any direct children
  * of the content, we still want clicking/hovering etc */
@@ -169,27 +150,25 @@ transition: 0s
 }
 </style>
 
-<div class='content'>
-    <button class="button">Click Me</button>
-</div>
+<div class='button-container'>
+  <div class='content'>
+      <button class="comment_button"><i class="fas fa-comment"></i></button>
+  </div>
 
-<div class='content'>
-    <button class="comment_button">Comment</button>
-</div>
+  <div class='content'>
+      <button class="comment_button"><i class="fas fa-heart"></i></button>
+  </div>
 
-<div class='content'>
-    <button class="comment_button">Like</button>
-</div>
-
-<div class='content'>
-    <button class="comment_button">Post</button>
+  <div class='content'>
+      <button class="comment_button"><i class="fas fa-pen"></i></button>
+  </div>
 </div>
 `
 WL.registerComponent('html-ui', {
 }, {
     start: function() {
         /* Add any HTML to the DOM here */
-        console.log("appending html")
+
         const div = document.createElement('div');
         /* Overlap this div over the canvas and fill the screen */
         div.style.position = 'fixed';
