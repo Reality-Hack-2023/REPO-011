@@ -20,7 +20,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-let posts_list = NULL
+let posts_list = null;
 
 // Get a list of cities from your database
 async function getPosts(db) {
