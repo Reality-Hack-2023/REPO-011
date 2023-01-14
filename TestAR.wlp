@@ -182,7 +182,7 @@
                 }
             ],
             "translation": [
-                0.4999999,
+                0.4999998,
                 0.75,
                 -1.25
             ],
@@ -260,35 +260,14 @@
                 "name": "root<Sketchfab_model",
                 "file": "assets\\stylized_planet\\scene.gltf"
             },
-            "parent": "70",
-            "translation": [
-                -1.4280891,
-                0.0,
-                0.0912194
-            ],
-            "rotation": [
-                -1.2107170377362308e-8,
-                -4.733400658096798e-7,
-                4.6333553882504936e-8,
-                1.0
-            ],
-            "scale": [
-                0.9999944,
-                1.0,
-                1.0000033
-            ]
+            "parent": "70"
         },
         "72": {
             "link": {
                 "name": "GLTF_SceneRootNode<root<Sketchfab_model",
                 "file": "assets\\stylized_planet\\scene.gltf"
             },
-            "parent": "71",
-            "components": [
-                {
-                    "type": "planetRotation"
-                }
-            ]
+            "parent": "71"
         },
         "73": {
             "link": {
@@ -304,20 +283,20 @@
             },
             "parent": "73",
             "translation": [
-                -0.0003814,
-                0.010118,
-                -0.0061521
+                0.1265618,
+                1.9813879,
+                -0.0620267
             ],
             "rotation": [
-                0.0,
                 -0.0,
-                0.0,
+                -1.0943040251731873e-8,
+                -0.0,
                 1.0
             ],
             "scale": [
-                1.0000004,
-                1.0000004,
-                1.0000004
+                1.0,
+                1.0000058,
+                1.0000058
             ]
         },
         "75": {
@@ -333,11 +312,21 @@
                 "file": "assets\\stylized_planet\\scene.gltf"
             },
             "parent": "75",
-            "components": [
-                null,
-                {
-                    "type": "planetRotation"
-                }
+            "translation": [
+                0.1215036,
+                1.9021999,
+                -0.0595478
+            ],
+            "rotation": [
+                -0.0,
+                -1.7229467630386353e-8,
+                -0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.000009,
+                1.000009
             ]
         }
     },
