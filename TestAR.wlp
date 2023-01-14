@@ -8,6 +8,9 @@
                     "wasd-controls": {
                         "headObject": "17"
                     }
+                },
+                {
+                    "type": "html-ui"
                 }
             ],
             "translation": [
@@ -550,7 +553,7 @@
             "useInternalBundler": false
         },
         "ar": {
-            "framework": "webxr"
+            "framework": "none"
         },
         "rendering": {
             "clearColor": [
