@@ -36,7 +36,7 @@
   // js/8thwall-camera.js
   var require_thwall_camera = __commonJS({
     "js/8thwall-camera.js"() {
-      var KEY = "mzHVlEGqWxbqx6BBVxHZ9j61wLrZNIUqviX8C7i38B0w15Zr7j7V4Zy2YMvjGx8MJhTwig";
+      var KEY = "yR1LXGhTTT8fGrN7qpVRX4iUodRhJCnfYVMEgfvLd7SEOy3ddy53HINPjR9Bg8apg31fxs";
       function loadXR8(scriptURL) {
         return new Promise((res, rej) => {
           const s = document.createElement("script");
