@@ -208,13 +208,6 @@
                 null,
                 {
                     "type": "hit-test-location"
-                },
-                {
-                    "type": "spawn-mesh-on-select",
-                    "spawn-mesh-on-select": {
-                        "mesh": "8",
-                        "material": "22"
-                    }
                 }
             ],
             "translation": [
@@ -255,19 +248,19 @@
                 "file": "models\\ar-target.glb"
             },
             "translation": [
-                -0.0360474,
-                -0.2702946,
-                -3.1046464
+                -0.0360475,
+                -0.2702947,
+                -3.1046466
             ],
             "rotation": [
                 0.5,
                 0.5,
-                0.4999999,
+                0.5,
                 0.4999999
             ],
             "scale": [
+                1.0000003,
                 1.0000002,
-                1.0000001,
                 1.0000001
             ],
             "components": [
@@ -277,7 +270,7 @@
                     }
                 }
             ],
-            "parent": "14"
+            "parent": "17"
         },
         "79": {
             "link": {
