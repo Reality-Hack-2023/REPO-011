@@ -1,4 +1,4 @@
-import 'firestone-api.js';
+import './firestore-api.js';
 
 const HTMLCode = `
 <style>

@@ -208,13 +208,6 @@
                 null,
                 {
                     "type": "hit-test-location"
-                },
-                {
-                    "type": "spawn-mesh-on-select",
-                    "spawn-mesh-on-select": {
-                        "mesh": "8",
-                        "material": "22"
-                    }
                 }
             ],
             "translation": [
@@ -249,129 +242,26 @@
                 }
             ]
         },
-        "70": {
-            "link": {
-                "name": "Sketchfab_model",
-                "file": "assets\\stylized_planet\\scene.gltf"
-            },
-            "translation": [
-                -1.8209463,
-                0.0,
-                0.0
-            ],
-            "rotation": [
-                -0.6956252,
-                -0.0228982,
-                0.022194,
-                0.7176967
-            ],
-            "scale": [
-                0.9999949,
-                1.0,
-                0.9999949
-            ]
-        },
-        "71": {
-            "link": {
-                "name": "root<Sketchfab_model",
-                "file": "assets\\stylized_planet\\scene.gltf"
-            },
-            "parent": "70"
-        },
-        "72": {
-            "link": {
-                "name": "GLTF_SceneRootNode<root<Sketchfab_model",
-                "file": "assets\\stylized_planet\\scene.gltf"
-            },
-            "parent": "71"
-        },
-        "73": {
-            "link": {
-                "name": "Clouds_1<GLTF_SceneRootNode<root<Sketchfab_model",
-                "file": "assets\\stylized_planet\\scene.gltf"
-            },
-            "parent": "72",
-            "components": [
-                {
-                    "animation": {
-                        "autoplay": true
-                    }
-                }
-            ]
-        },
-        "74": {
-            "link": {
-                "name": "Object_4<Clouds_1<GLTF_SceneRootNode<root<Sketchfab_model",
-                "file": "assets\\stylized_planet\\scene.gltf"
-            },
-            "parent": "73",
-            "translation": [
-                0.1265618,
-                1.9813879,
-                -0.0620267
-            ],
-            "rotation": [
-                -0.0,
-                -1.0943040251731873e-8,
-                -0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0000058,
-                1.0000058
-            ]
-        },
-        "75": {
-            "link": {
-                "name": "Planet_2<GLTF_SceneRootNode<root<Sketchfab_model",
-                "file": "assets\\stylized_planet\\scene.gltf"
-            },
-            "parent": "72"
-        },
-        "76": {
-            "link": {
-                "name": "Object_6<Planet_2<GLTF_SceneRootNode<root<Sketchfab_model",
-                "file": "assets\\stylized_planet\\scene.gltf"
-            },
-            "parent": "75",
-            "translation": [
-                0.1215036,
-                1.9021999,
-                -0.0595478
-            ],
-            "rotation": [
-                -0.0,
-                -1.7229467630386353e-8,
-                -0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.000009,
-                1.000009
-            ]
-        },
         "78": {
             "link": {
                 "name": "AR Target",
                 "file": "models\\ar-target.glb"
             },
             "translation": [
-                -2.3309593,
-                0.0,
-                -1.1920928955078125e-7
+                -0.0360475,
+                -0.2702947,
+                -3.1046466
             ],
             "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
+                0.5,
+                0.5,
+                0.5,
+                0.4999999
             ],
             "scale": [
-                1.0,
-                1.0,
-                1.0
+                1.0000003,
+                1.0000002,
+                1.0000001
             ],
             "components": [
                 {
@@ -380,7 +270,77 @@
                     }
                 }
             ],
-            "parent": null
+            "parent": "17"
+        },
+        "79": {
+            "link": {
+                "name": "Sketchfab_model",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            },
+            "translation": [
+                -8.940696716308595e-8,
+                2.0692152,
+                1.1999378
+            ],
+            "rotation": [
+                -0.6956252,
+                -0.0228982,
+                0.022194,
+                0.7176967
+            ],
+            "scale": [
+                0.9999873,
+                1.0,
+                0.9999881
+            ]
+        },
+        "80": {
+            "link": {
+                "name": "root<Sketchfab_model",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            },
+            "parent": "79"
+        },
+        "81": {
+            "link": {
+                "name": "GLTF_SceneRootNode<root<Sketchfab_model",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            },
+            "parent": "80"
+        },
+        "82": {
+            "link": {
+                "name": "Clouds_1<GLTF_SceneRootNode<root<Sketchfab_model",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            },
+            "parent": "81"
+        },
+        "83": {
+            "link": {
+                "name": "Object_4<Clouds_1<GLTF_SceneRootNode<root<Sketchfab_model",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            },
+            "parent": "82"
+        },
+        "84": {
+            "link": {
+                "name": "Planet_2<GLTF_SceneRootNode<root<Sketchfab_model",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            },
+            "parent": "81"
+        },
+        "85": {
+            "link": {
+                "name": "Object_6<Planet_2<GLTF_SceneRootNode<root<Sketchfab_model",
+                "file": "assets\\stylized_planet\\scene.gltf"
+            },
+            "parent": "84",
+            "components": [
+                null,
+                {
+                    "type": "planetRotation"
+                }
+            ]
         }
     },
     "meshes": {
