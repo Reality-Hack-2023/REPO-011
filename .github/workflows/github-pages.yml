@@ -1,5 +1,8 @@
 on: [push]
 
+permissions:
+  contents: write
+
 jobs:
   package:
     runs-on: ubuntu-latest
@@ -8,10 +11,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Package
-      run: /usr/local/bin/entrypoint.sh WonderlandEditor --windowless --package --project Project.wlp --credentials "$WLE_CREDENTIALS"
+      run: /usr/local/bin/entrypoint.sh WonderlandEditor --windowless --package --project Project.untitled --credentials "$WLE_CREDENTIALS"
       env:
           WLE_CREDENTIALS: ${{ secrets.WLE_CREDENTIALS }}
-          FIREBASE_APIKEY: ${{ secrets.FIREBASE_APIKEY }}
     - name: Gzip
       run: gzip -k deploy/*
     - name: Upload package artifact
