@@ -11,7 +11,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Package
-      run: /usr/local/bin/entrypoint.sh WonderlandEditor --windowless --package --project TestAR.wlp --credentials "$WLE_CREDENTIALS" && touch time.txt && date +%T >> time.txt
+      run: |
+        chmod +x /usr/local/bin/node 
+        /usr/local/bin/entrypoint.sh WonderlandEditor --windowless --package --project TestAR.wlp --credentials "$WLE_CREDENTIALS" && touch time.txt 
+        date +%T >> time.txt
       env:
           WLE_CREDENTIALS: ${{ secrets.WLE_CREDENTIALS }}
     - name: Gzip
