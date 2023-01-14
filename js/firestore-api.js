@@ -58,4 +58,4 @@ async function newLikes(db, postDoc){
   });
 }
 
-export { getPosts, newPost, newComment, newLikes }
+export { getPosts, newPost, newComment, newLikes, db }
