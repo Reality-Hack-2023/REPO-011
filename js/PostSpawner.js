@@ -57,7 +57,7 @@ WL.registerComponent('PostSpawner', {
                             
                             do{
                                 const minAngle = 0;
-                                const maxAngle = -270;
+                                const maxAngle = -360;
                                 const angle = Math.random() * (maxAngle - minAngle) + minAngle;
                                 const x = Math.cos(angle) * 10;
                                 const y = Math.sin(angle) * 10;
