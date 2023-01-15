@@ -14404,17 +14404,20 @@
                 console.log("Clicked:", currentlyClicked);
               }
               var newMesh = this.object.getComponent("mesh");
+              this.material_org = newMesh.material;
               newMesh.material = this.material_change;
               var allInactiveButtons = document.querySelectorAll(".inactive_button");
               allInactiveButtons.forEach((element) => {
                 element.className = "active_button";
                 element.disabled = false;
               });
-              if (planets.length > 0) {
-                this.postPreviewObj.getComponent("uiHandler").setPost(planets[currentlyClicked].data.text);
+              if (currentlyClicked.clicked) {
+                this.postPreviewObj.getComponent("uiHandler").setPost(planets.get(currentlyClicked.clicked).data.text);
                 this.postPreviewObj.active = true;
               }
               this.postPreviewObj.setTranslationWorld(glMatrix.vec3.add([], this.object.getTranslationWorld([]), [0, 2, 0]));
+              this.postPreviewObj.lookAt(WL.scene.activeViews[0].object.getTranslationWorld([]));
+              this.postPreviewObj.rotateAxisAngleDegObject([0, 1, 0], 180);
               selected = true;
             } else {
               var newMesh = this.object.getComponent("mesh");
@@ -14652,7 +14655,7 @@ input:focus ~ .input-border {
     <label for="text">Text:</label>
     <textarea class="input" Placeholder="Type here" name="text" id="text" required></textarea>
     <br>
-    <button type="button" id="submit-button" onclick="submitPost()">Submit</button>
+    <button type="button" id="submit-post-button" onclick="submitPost()">Submit</button>
     <button type="button" id="close-post-button" onclick="closePost()">Close</button>
   </form>
 </div>
@@ -14662,7 +14665,8 @@ input:focus ~ .input-border {
     <label for="text">Comment:</label>
     <textarea class="input" Placeholder="Type here" name="comment" id="comment" required></textarea>
     <br>
-    <button type="button" id="submit-button" onclick="submitComment()">Submit</button>
+    <button type="button" id="submit-comment-button" onclick="submitComment()">Submit</button>
+    <button type="button" id="close-comment-button" onclick="closeComment()">Close</button>
   </form>
 </div>
 
@@ -14701,6 +14705,9 @@ input:focus ~ .input-border {
         } else {
           console.error("No plannet is clicked, how did u get here???");
         }
+        document.getElementById("comment-form").style.display = "none";
+      };
+      window.closeComment = function() {
         document.getElementById("comment-form").style.display = "none";
       };
       window.likePost = function() {
