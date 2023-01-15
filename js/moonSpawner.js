@@ -14,8 +14,12 @@ WL.registerComponent('moonSpawner', {
         newMesh.mesh = this.mesh;
         newMesh.material = this.material;
 
-        
+
         var moonRotation = newObj.addComponent('moonRotation');
+        moonRotation.speed = (Math.random() + 1) * 1000
+        moonRotation.x = Math.random() * 360
+        moonRotation.y = Math.random() * 360
+        moonRotation.z = Math.random() * 360
         
 
     },

@@ -7,3 +7,4 @@ require('./planetPostInfo.js')
 require('./planetRotation.js');
 require('./planetOnCollision.js');
 require('./moonRotation.js');
+require('./spawn-mesh-on-select.js')

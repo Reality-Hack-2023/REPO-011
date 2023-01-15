@@ -42,6 +42,7 @@ WL.registerComponent('PostSpawner', {
                             newInfo.planet_id = post.ref.id;
 
                             post.data().comments.forEach((comment) => {
+                                newObj.rotateAxisAngleRadObject([1,0,0], Math.random())
                                 var moonObj = WL.scene.addObject(newObj);
                                 moonObj.scalingWorld = [0.3,0.3,0.3]
                                 var moonMesh = moonObj.addComponent("mesh");
@@ -49,7 +50,7 @@ WL.registerComponent('PostSpawner', {
                                 moonMesh.mesh = this.moon_mesh;
                                 moonMesh.material = this.moon_material;
 
-                                moonObj.addComponent('moonRotation');
+                                moonObj.addComponent('moonRotation', {speed: 360*Math.random()});
                             })
 
                             if (planets.length == 0)
