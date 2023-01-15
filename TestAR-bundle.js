@@ -17230,7 +17230,7 @@ input:focus ~ .input-border {
                   });
                   do {
                     const minAngle = 0;
-                    const maxAngle = -270;
+                    const maxAngle = -360;
                     const angle = Math.random() * (maxAngle - minAngle) + minAngle;
                     const x2 = Math.cos(angle) * 10;
                     const y2 = Math.sin(angle) * 10;
