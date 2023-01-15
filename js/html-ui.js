@@ -143,6 +143,61 @@ h2 {
   bottom: 0;
   width: 100%;
 }
+.postForm {
+  
+  border-radius: 1px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  transition: all 0.2s ease-in-out;
+  position: absolute; 
+
+  --width-of-input: 200px;
+  --border-height: 1px; 
+  --border-before-color: #C8D3D5;
+  --border-after-color: #628F93; 
+    width: var(--width-of-input);  
+
+  top: 25%;  /* center the form vertically */
+  left: 50%; /* center the form horizontally */
+  transform: translate(-50%, -50%); /* adjust the position */
+}
+
+
+/* styling of Input */
+.input {
+ color: #fff;
+ font-size: 0.9rem;
+ background-color: transparent;
+ width: 100%;
+ box-sizing: border-box;
+ padding-inline: 0.5em;
+ padding-block: 0.7em;
+ border: none;
+ border-bottom: var(--border-height) solid var(--border-before-color);
+}
+
+/* styling of animated border */
+.input-border {
+ position: absolute;
+ background: var(--border-after-color);
+ width: 0%;
+ height: 2px;
+ bottom: 0;
+ left: 0;
+ transition: 0.3s;
+}
+
+/* Hover on Input */
+input:hover {
+ background: var(--input-hovered-color);
+}
+
+input:focus {
+ outline: none;
+}
+/* here is code of animated border */
+input:focus ~ .input-border {
+ width: 100%;
+}
 
 /* We disable "pointer-events" on the parent, because it needs to
  * let through any events to the canvas. But for any direct children
@@ -151,21 +206,40 @@ h2 {
   pointer-events: auto;
 }
 </style>
+<div id="post-form" style="display: none;" class='content postForm'>
+  <form>
+    <label for="author">Author:</label>
+    <input class="input" placeholder="Enter your name" id="author" name="author" required>
+    <br>
+    <label for="text">Text:</label>
+    <textarea class="input" Placeholder="Type here" name="text" required></textarea>
+    <br>
+    <button type="submit" id="submit-button" onclick="closeForm();newPost(author, text)">Submit</button>
+  </form>
+</div>
 
 <div class='button-container'>
   <div class='content'>
-      <button class="comment_button" onclick="newComment()"><i class="fas fa-comment"></i></button>
+  <button class="comment_button"><i class="fas fa-comment"></i></button>
   </div>
 
   <div class='content'>
-      <button class="comment_button" onclick="newLikes()"><i class="fas fa-heart"></i></button>
+  <button class="comment_button"><i class="fas fa-heart"></i></button>
   </div>
 
   <div class='content'>
-      <button class="comment_button" onclick="newPost()"><i class="fas fa-pen"></i></button>
+  <button class="comment_button" onclick="openForm()"><i class="fas fa-pen"></i></button>
   </div>
 </div>
 `
+window.openForm = function() {
+  document.getElementById("post-form").style.display = "block";
+}
+
+window.closeForm = function() {
+  document.getElementById("post-form").style.display = "none";
+}
+
 WL.registerComponent('html-ui', {
 }, {
     start: function() {
@@ -186,3 +260,4 @@ WL.registerComponent('html-ui', {
         document.body.appendChild(div);
     },
 });
+

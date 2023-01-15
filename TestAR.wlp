@@ -77,6 +77,12 @@
                 },
                 {
                     "type": "8thwall-camera0"
+                },
+                {
+                    "type": "cursor",
+                    "cursor": {
+                        "cursorObject": "86"
+                    }
                 }
             ]
         },
@@ -256,15 +262,58 @@
                 }
             ]
         },
+<<<<<<< HEAD
         "70": {
+=======
+        "78": {
+            "link": {
+                "name": "AR Target",
+                "file": "models\\ar-target.glb"
+            },
+            "translation": [
+                -0.0360475,
+                -0.2702947,
+                -3.1046466
+            ],
+            "rotation": [
+                0.5,
+                0.5,
+                0.5,
+                0.4999999
+            ],
+            "scale": [
+                1.0000003,
+                1.0000002,
+                1.0000001
+            ],
+            "components": [
+                {
+                    "mesh": {
+                        "material": "26"
+                    }
+                },
+                {
+                    "type": "cursor-target"
+                }
+            ],
+            "parent": "17"
+        },
+        "79": {
+>>>>>>> b3d21de72772130d12ccd327ac18eb55cb1b0776
             "link": {
                 "name": "Sketchfab_model",
                 "file": "assets\\stylized_planet\\scene.gltf"
             },
             "translation": [
+<<<<<<< HEAD
                 -1.8209463,
                 0.0,
                 0.0
+=======
+                -8.940696716308596e-8,
+                2.0692152,
+                1.1999378
+>>>>>>> b3d21de72772130d12ccd327ac18eb55cb1b0776
             ],
             "rotation": [
                 -0.6956252,
@@ -275,7 +324,31 @@
             "scale": [
                 0.9999949,
                 1.0,
+<<<<<<< HEAD
                 0.9999949
+=======
+                0.9999881
+            ],
+            "components": [
+                {
+                    "type": "collision",
+                    "collision": {
+                        "sphere": {
+                            "radius": 0.8999999
+                        }
+                    }
+                },
+                {
+                    "type": "cursor-target"
+                },
+                {
+                    "type": "planetOnCollision",
+                    "planetOnCollision": {
+                        "material_org": "66",
+                        "material_change": "22"
+                    }
+                }
+>>>>>>> b3d21de72772130d12ccd327ac18eb55cb1b0776
             ]
         },
         "71": {
@@ -357,6 +430,34 @@
                 1.0,
                 1.000009,
                 1.000009
+            ]
+        },
+        "86": {
+            "name": "cursor",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "9",
+                        "material": "87"
+                    }
+                }
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                3.0180497
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.0672,
+                0.0672,
+                0.0672
             ]
         }
     },
@@ -540,6 +641,17 @@
             "link": {
                 "name": "Planet",
                 "file": "assets\\stylized_planet\\scene.gltf"
+            }
+        },
+        "87": {
+            "name": "white white",
+            "Phong": {
+                "ambientColor": [
+                    0.6509803,
+                    0.638216,
+                    0.638216,
+                    1.0
+                ]
             }
         }
     },

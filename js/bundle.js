@@ -5,4 +5,4 @@ require('./html-ui.js');
 require('./PostSpawner.js')
 require('./planetPostInfo.js')
 require('./planetRotation.js');
-
+require('./planetOnCollision.js');
