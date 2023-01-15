@@ -1,4 +1,5 @@
 import { map } from '@firebase/util';
+import { textures } from '@wonderlandengine/api';
 import { getPosts, newPost, newComment, newLikes, db } from './firestore-api.js'
 var planets = new Map();
 WL.registerComponent('PostSpawner', {
@@ -8,7 +9,16 @@ WL.registerComponent('PostSpawner', {
     init: function() {
         console.log('init() with param', this.param);
     },
-    start: function() {
+    start: function() {//add all textures
+        this.textures = [];
+        [].forEach(file => {
+            WL.textures.load(this.url, 'anonymous')
+                .then((texture) => {
+                        this.textures.push(textures);
+                }
+                );
+        });
+
         console.log('start() with param', this.param);
             // setTimeout recursively to make sure it waits for the last request to finish
             let updatePosts;
@@ -23,7 +33,9 @@ WL.registerComponent('PostSpawner', {
                             var newInfo = newObj.addComponent("planetPostInfo")
                             
                             newMesh.mesh = this.mesh;
-                            newMesh.material = this.material;
+                            newMesh.material = this.material.clone();
+                            newMesh.material.diffuseTexture = ...
+
                             newInfo.planet_id = post.ref.id;
 
                             if (planets.length == 0)
