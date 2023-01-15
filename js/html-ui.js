@@ -207,7 +207,8 @@ input:focus ~ .input-border {
     <label for="text">Text:</label>
     <textarea class="input" Placeholder="Type here" name="text" id="text" required></textarea>
     <br>
-    <button type="button" id="submit-button" onclick="closePost()">Submit</button>
+    <button type="button" id="submit-button" onclick="submitPost()">Submit</button>
+    <button type="button" id="close-post-button" onclick="closePost()">Close</button>
   </form>
 </div>
 
@@ -238,9 +239,13 @@ window.openPost = function() {
   document.getElementById("post-form").style.display = "block";
 }
 
-window.closePost = function() {
+window.submitPost = function() {
   document.getElementById("post-form").style.display = "none";
   newPost(db, document.getElementById("author").value, document.getElementById("text").value);
+}
+
+window.closePost = function() {
+  document.getElementById("post-form").style.display = "none";
 }
 
 window.likePost = function() {

@@ -7,3 +7,5 @@ require('./planetPostInfo.js')
 require('./planetRotation.js');
 require('./planetOnCollision.js');
 require('./moonRotation.js');
+require('./uiHandler.js');
+require('./CanvasUI.js');
