@@ -14367,16 +14367,15 @@
 
   // js/planetOnCollision.js
   var planetOnCollision_exports = {};
-  var postPreviewObj;
   var init_planetOnCollision = __esm({
     "js/planetOnCollision.js"() {
       init_html_ui();
-      postPreviewObj = null;
       WL.registerComponent("planetOnCollision", {
         material_org: { type: WL.Type.Material },
         material_change: { type: WL.Type.Material },
         canvas_mesh: { type: WL.Type.Mesh },
-        canvas_material: { type: WL.Type.Material }
+        canvas_material: { type: WL.Type.Material },
+        postPreviewObj: { type: WL.Type.Object }
       }, {
         init: function() {
           console.log("init() with param", this.param);
@@ -14397,11 +14396,8 @@
                 element.className = "active_button";
                 element.disabled = false;
               });
-              postPreviewObj = WL.scene.addObject();
-              var postPreviewMesh = postPreviewObj.addComponent("mesh");
-              postPreviewMesh.mesh = this.canvas_mesh;
-              postPreviewMesh.material = this.canvas_material;
-              postPreviewObj.setTranslationWorld(glMatrix.vec3.add([], this.object.getTranslationWorld([]), [0, 2, 0]));
+              this.postPreviewObj.getComponent("uiHandler").setPost();
+              this.postPreviewObj.setTranslationWorld(glMatrix.vec3.add([], this.object.getTranslationWorld([]), [0, 2, 0]));
               selected = true;
             } else {
               var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
@@ -17174,7 +17170,8 @@ input:focus ~ .input-border {
         mesh: { type: WL.Type.Mesh },
         material: { type: WL.Type.Material },
         moon_mesh: { type: WL.Type.Mesh },
-        moon_material: { type: WL.Type.Material }
+        moon_material: { type: WL.Type.Material },
+        postPreviewObj: { type: WL.Type.Object }
       }, {
         init: function() {
           console.log("init() with param", this.param);
@@ -17193,7 +17190,7 @@ input:focus ~ .input-border {
                   var newMesh = newObj.addComponent("mesh");
                   var newCollision = newObj.addComponent("collision", { extents: [this.size, this.size, this.size], collider: Collider.Sphere, group: 1 });
                   var newInfo = newObj.addComponent("planetPostInfo");
-                  newObj.addComponent("planetOnCollision");
+                  newObj.addComponent("planetOnCollision", { postPreviewObj: this.postPreviewObj });
                   newMesh.mesh = this.mesh;
                   var mat2 = this.material.clone();
                   console.log(this.textures);
@@ -18378,7 +18375,10 @@ input:focus ~ .input-border {
             }
           };
           const content = {
-            main: currentlyClicked != null ? planets[currentlyClicked].data.text : "test text"
+            main: "test text"
+          };
+          this.setPost = (p) => {
+            content.main = p;
           };
           this.ui = new CanvasUI(content, config, this.object);
           this.ui.update();
