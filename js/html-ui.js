@@ -234,6 +234,10 @@ input:focus ~ .input-border {
   </div>
 </div>
 `
+
+const planets = new Map();
+const currentlyClicked = {clicked: null};
+
 window.openPost = function() {
   document.getElementById("post-form").style.display = "block";
 }
@@ -243,22 +247,22 @@ window.closePost = function() {
   newPost(db, document.getElementById("author").value, document.getElementById("text").value);
 }
 
+window.openComment = function() {
+  document.getElementById("comment-form").style.display = "block";
+}
+
+window.submitComment = function() {
+  document.getElementById("comment-form").style.display = "none";
+  if(currentlyClicked){
+    newComment(db, currentlyClicked, document.getElementById("comment").value)
+  }else{
+    console.error("No plannet is clicked, how did u get here???")
+  }
+}
+
 window.likePost = function() {
   if (planet_identifier != null) {
     newLikes(db, planet_identifier);
-  }
-}
-
-window.openComment = function() {
-  if (planet_identifier != null) {
-    document.getElementById("comment-form").style.display = "block";
-  }
-}
-
-window.closeComment = function() {
-  if (planet_identifier != null) {
-    document.getElementById("comment-form").style.display = "none";
-    newComment(db, planet_identifier, document.getElementById("comment").value);
   }
 }
 
@@ -282,4 +286,6 @@ WL.registerComponent('html-ui', {
         document.body.appendChild(div);
     },
 });
+
+export {planets, currentlyClicked};
 

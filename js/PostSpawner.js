@@ -1,7 +1,8 @@
 import { map } from '@firebase/util';
 import { textures } from '@wonderlandengine/api';
 import { getPosts, newPost, newComment, newLikes, db } from './firestore-api.js'
-var planets = new Map();
+import { planets } from './html-ui.js'
+
 WL.registerComponent('PostSpawner', {
     mesh: {type: WL.Type.Mesh},
     material: {type: WL.Type.Material},

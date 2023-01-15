@@ -1,6 +1,4 @@
-import './html-ui.js';
-
-let planet_identifier = null;
+import { currentlyClicked } from './html-ui.js';
 
 WL.registerComponent('planetOnCollision', {
     material_org: {type: WL.Type.Material},
@@ -16,7 +14,7 @@ WL.registerComponent('planetOnCollision', {
             if (!selected) {
                 find_planet = this.object.getComponent("planetPostInfo");
                 if (find_planet != null) {
-                    planet_identifier = find_planet.planet_id;
+                    currentlyClicked.clicked = find_planet.planet_id;
                 }
                 var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
                 newMesh.material = this.material_change;
@@ -41,5 +39,3 @@ WL.registerComponent('planetOnCollision', {
     update: function(dt) {
     },
 });
-
-export { planet_identifier }
