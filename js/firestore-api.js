@@ -28,6 +28,7 @@ async function getPosts(db) {
   const postsSnapshot = await getDocs(posts);
   const postsList = postsSnapshot.docs.map(doc => doc.data());
   posts_list = postsList;
+  return posts_list;
 }
 
 async function newPost(db, author, text){
@@ -58,4 +59,4 @@ async function newLikes(db, postDoc){
   });
 }
 
-export { getPosts, newPost, newComment, newLikes, db }
+export { getPosts, newPost, newComment, newLikes, db,posts_list }
