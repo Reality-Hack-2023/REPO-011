@@ -14416,6 +14416,7 @@
                 element.disabled = true;
               });
               if (postPreviewObj != null) {
+                postPreviewObj.destroy();
               }
               selected = false;
             }
@@ -17303,9 +17304,12 @@ input:focus ~ .input-border {
   });
 
   // js/uiHandler.js
-  var require_uiHandler = __commonJS({
+  var uiHandler_exports = {};
+  var CanvasKeyboard, CanvasUI;
+  var init_uiHandler = __esm({
     "js/uiHandler.js"() {
-      var CanvasKeyboard = class {
+      init_html_ui();
+      CanvasKeyboard = class {
         constructor(width, canvasui, lang = "EN") {
           const config = this.getConfig(lang);
           config.panelSize = { width, height: width * 0.5 };
@@ -17630,7 +17634,7 @@ input:focus ~ .input-border {
           }
         }
       };
-      var CanvasUI = class {
+      CanvasUI = class {
         constructor(content, config, object) {
           const defaultconfig = {
             width: 512,
@@ -18361,31 +18365,17 @@ input:focus ~ .input-border {
         },
         simplePanel: function() {
           const config = {
-            header: {
-              type: "text",
-              position: { top: 0 },
-              paddingTop: 30,
-              height: 70
-            },
             main: {
               type: "text",
-              position: { top: 70 },
-              height: 372,
+              position: { top: 128 },
+              height: 256,
               // default height is 512 so this is 512 - header height (70) - footer height (70)
               backgroundColor: "#bbb",
               fontColor: "#000"
-            },
-            footer: {
-              type: "text",
-              position: { bottom: 0 },
-              paddingTop: 30,
-              height: 70
             }
           };
           const content = {
-            header: "Header",
-            main: "This is the main text",
-            footer: "Footer"
+            main: (void 0)[void 0].data.text
           };
           this.ui = new CanvasUI(content, config, this.object);
           this.ui.update();
@@ -18679,7 +18669,7 @@ input:focus ~ .input-border {
   require_planetRotation();
   init_planetOnCollision();
   init_moonRotation();
-  require_uiHandler();
+  init_uiHandler();
   require_CanvasUI();
   require_spawn_mesh_on_select();
 })();
