@@ -204,9 +204,9 @@ input:focus ~ .input-border {
     <input class="input" placeholder="Enter your name" id="author" name="author" required>
     <br>
     <label for="text">Text:</label>
-    <textarea class="input" Placeholder="Type here" name="text" required></textarea>
+    <textarea class="input" Placeholder="Type here" name="text" id="text" required></textarea>
     <br>
-    <button type="submit" id="submit-button" onclick="closeForm()">Submit</button>
+    <button type="button" id="submit-button" onclick="closeForm()">Submit</button>
   </form>
 </div>
 
@@ -230,7 +230,7 @@ window.openForm = function() {
 
 window.closeForm = function() {
   document.getElementById("post-form").style.display = "none";
-  newPost(db, document.getElementById("author"), document.getElementById("text"));
+  newPost(db, document.getElementById("author").value, document.getElementById("text").value);
 }
 
 WL.registerComponent('html-ui', {
