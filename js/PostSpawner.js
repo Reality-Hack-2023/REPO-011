@@ -10,6 +10,7 @@ WL.registerComponent('PostSpawner', {
     material: {type: WL.Type.Material},
     moon_mesh: {type: WL.Type.Mesh},
     moon_material: {type: WL.Type.Material},
+    postPreviewObj: {type: WL.Type.Object},
 }, {
     init: function() {
         console.log('init() with param', this.param);
@@ -33,7 +34,7 @@ WL.registerComponent('PostSpawner', {
                             var newMesh = newObj.addComponent("mesh");
                             var newCollision = newObj.addComponent("collision", {extents: [this.size, this.size, this.size], collider: Collider.Sphere, group: 1});
                             var newInfo = newObj.addComponent("planetPostInfo");
-                            newObj.addComponent("planetOnCollision");
+                            newObj.addComponent("planetOnCollision", {postPreviewObj: this.postPreviewObj});
                             
                             newMesh.mesh = this.mesh;
                             var mat =this.material.clone();

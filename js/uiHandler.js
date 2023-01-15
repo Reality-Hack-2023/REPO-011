@@ -1092,7 +1092,11 @@ WL.registerComponent('uiHandler', {
         }
         
         const content = {
-            main: currentlyClicked != null ? planets[currentlyClicked].data.text : "test text",
+            main: "test text",
+        }
+        
+        this.setPost = (p) => {
+            content.main = p
         }
         
         this.ui = new CanvasUI( content, config, this.object );

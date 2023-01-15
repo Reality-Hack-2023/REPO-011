@@ -18,7 +18,8 @@
                         "mesh": "69",
                         "material": "22",
                         "moon_mesh": "9",
-                        "moon_material": "25"
+                        "moon_material": "25",
+                        "postPreviewObj": "f225d7ae-4725-423f-a8a1-c58f0fa32688"
                     }
                 }
             ],
@@ -251,6 +252,37 @@
                 1.000009,
                 1.000009
             ]
+        },
+        "f225d7ae-4725-423f-a8a1-c58f0fa32688": {
+            "name": "postPreview",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "7",
+                        "material": "91a4009d-997f-4727-8836-da2693509e2f"
+                    }
+                },
+                {
+                    "type": "uiHandler"
+                },
+                {
+                    "type": "cursor-target"
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                1.0,
+                                1.0,
+                                0.05
+                            ]
+                        }
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -443,6 +475,10 @@
                 "name": "Planet",
                 "file": "assets\\stylized_planet\\scene.gltf"
             }
+        },
+        "91a4009d-997f-4727-8836-da2693509e2f": {
+            "name": "CanvasUI",
+            "pipeline": "35"
         }
     },
     "shaders": {

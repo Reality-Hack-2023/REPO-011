@@ -1,12 +1,11 @@
 import { currentlyClicked } from './html-ui.js';
 
-let postPreviewObj = null;
-
 WL.registerComponent('planetOnCollision', {
     material_org: {type: WL.Type.Material},
     material_change: {type: WL.Type.Material},
     canvas_mesh: {type: WL.Type.Mesh},
     canvas_material: {type: WL.Type.Material},
+    postPreviewObj: {type: WL.Type.Object},
 }, {
     init: function() {
         console.log('init() with param', this.param);
@@ -29,13 +28,9 @@ WL.registerComponent('planetOnCollision', {
                     element.disabled = false;
                 });
 
-                postPreviewObj = WL.scene.addObject();
-                var postPreviewMesh = postPreviewObj.addComponent("mesh");
+                this.postPreviewObj.getComponent("uiHandler").setPost()
 
-                postPreviewMesh.mesh = this.canvas_mesh;
-                postPreviewMesh.material = this.canvas_material;
-
-                postPreviewObj.setTranslationWorld(glMatrix.vec3.add([], this.object.getTranslationWorld([]), [0, 2, 0]));
+                this.postPreviewObj.setTranslationWorld(glMatrix.vec3.add([], this.object.getTranslationWorld([]), [0, 2, 0]));
 
                 selected = true;
             } else {
