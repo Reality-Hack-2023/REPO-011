@@ -6,3 +6,4 @@ require('./PostSpawner.js')
 require('./planetPostInfo.js')
 require('./planetRotation.js');
 require('./planetOnCollision.js');
+require('./moonRotation.js');
