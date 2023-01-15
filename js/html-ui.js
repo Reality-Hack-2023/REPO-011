@@ -207,7 +207,7 @@ input:focus ~ .input-border {
     <label for="text">Text:</label>
     <textarea class="input" Placeholder="Type here" name="text" id="text" required></textarea>
     <br>
-    <button type="button" id="submit-button" onclick="submitPost()">Submit</button>
+    <button type="button" id="submit-post-button" onclick="submitPost()">Submit</button>
     <button type="button" id="close-post-button" onclick="closePost()">Close</button>
   </form>
 </div>
@@ -217,7 +217,8 @@ input:focus ~ .input-border {
     <label for="text">Comment:</label>
     <textarea class="input" Placeholder="Type here" name="comment" id="comment" required></textarea>
     <br>
-    <button type="button" id="submit-button" onclick="submitComment()">Submit</button>
+    <button type="button" id="submit-comment-button" onclick="submitComment()">Submit</button>
+    <button type="button" id="close-comment-button" onclick="closeComment()">Close</button>
   </form>
 </div>
 
@@ -262,6 +263,10 @@ window.submitComment = function() {
   }else{
     console.error("No plannet is clicked, how did u get here???")
   }
+  document.getElementById("comment-form").style.display = "none";
+}
+
+window.closeComment = function() {
   document.getElementById("comment-form").style.display = "none";
 }
 
