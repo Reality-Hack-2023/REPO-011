@@ -14396,7 +14396,10 @@
                 element.className = "active_button";
                 element.disabled = false;
               });
-              this.postPreviewObj.getComponent("uiHandler").setPost();
+              if (planets.length > 0) {
+                this.postPreviewObj.getComponent("uiHandler").setPost(planets[currentlyClicked].data.text);
+                this.postPreviewObj.active = true;
+              }
               this.postPreviewObj.setTranslationWorld(glMatrix.vec3.add([], this.object.getTranslationWorld([]), [0, 2, 0]));
               selected = true;
             } else {
@@ -14407,9 +14410,7 @@
                 element.className = "inactive_button";
                 element.disabled = true;
               });
-              if (postPreviewObj != null) {
-                postPreviewObj.destroy();
-              }
+              this.postPreviewObj.active = false;
               selected = false;
             }
           });
@@ -17177,6 +17178,7 @@ input:focus ~ .input-border {
           console.log("init() with param", this.param);
         },
         start: function() {
+          this.postPreviewObj.active = false;
           console.log("start() with param", this.param);
           let updatePosts;
           updatePosts = () => {
@@ -17304,12 +17306,9 @@ input:focus ~ .input-border {
   });
 
   // js/uiHandler.js
-  var uiHandler_exports = {};
-  var CanvasKeyboard, CanvasUI;
-  var init_uiHandler = __esm({
+  var require_uiHandler = __commonJS({
     "js/uiHandler.js"() {
-      init_html_ui();
-      CanvasKeyboard = class {
+      var CanvasKeyboard = class {
         constructor(width, canvasui, lang = "EN") {
           const config = this.getConfig(lang);
           config.panelSize = { width, height: width * 0.5 };
@@ -17634,7 +17633,7 @@ input:focus ~ .input-border {
           }
         }
       };
-      CanvasUI = class {
+      var CanvasUI = class {
         constructor(content, config, object) {
           const defaultconfig = {
             width: 512,
@@ -18672,7 +18671,7 @@ input:focus ~ .input-border {
   require_planetRotation();
   init_planetOnCollision();
   init_moonRotation();
-  init_uiHandler();
+  require_uiHandler();
   require_CanvasUI();
   require_spawn_mesh_on_select();
 })();
