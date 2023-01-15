@@ -29,11 +29,11 @@ WL.registerComponent('PostSpawner', {
                             
                             var newObj = WL.scene.addObject();
 
-                            this.size = 1 + (post.data().likes + post.data().comments.length) * 0.05
+                            this.size = 1 + (post.data().likes + post.data().comments.length) * 0.1
                             newObj.scale([this.size, this.size, this.size])
 
                             var newMesh = newObj.addComponent("mesh", {mesh : this.mesh});
-                            var newCollision = newObj.addComponent("collision", {extents: [this.size + 2, this.size + 2, this.size + 2], collider: Collider.Sphere, group: 1});
+                            var newCollision = newObj.addComponent("collision", {extents: [this.size + 1.5, this.size + 1.5, this.size + 1.5], collider: Collider.Sphere, group: 1});
                             var newInfo = newObj.addComponent("planetPostInfo");
                             newObj.addComponent("cursor-target");
                             newObj.addComponent("planetOnCollision", {material_org: this.material, material_change: this.material_onclick, postPreviewObj: this.postPreviewObj});
