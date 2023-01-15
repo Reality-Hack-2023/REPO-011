@@ -69,40 +69,15 @@
                 }
             ]
         },
-        "21": {
-            "name": "Light",
-            "components": [
-                {
-                    "type": "light",
-                    "light": {
-                        "attenuation": 0.1
-                    }
-                }
-            ],
-            "translation": [
-                0.0,
-                3.0,
-                2.0
-            ],
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ]
-        },
         "23": {
             "name": "Light.000",
             "components": [
                 {
                     "type": "light",
                     "light": {
-                        "attenuation": 0.1
+                        "attenuation": 0.001,
+                        "shadows": true,
+                        "range": 100.0
                     }
                 }
             ],
@@ -121,62 +96,6 @@
                 1.0,
                 1.0,
                 1.0
-            ]
-        },
-        "24": {
-            "name": "Cone",
-            "components": [
-                {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "10",
-                        "material": "25"
-                    }
-                }
-            ],
-            "translation": [
-                1.5,
-                1.0,
-                -1.4901161193847656e-8
-            ],
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ]
-        },
-        "27": {
-            "name": "Sphere",
-            "components": [
-                {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "9",
-                        "material": "26"
-                    }
-                }
-            ],
-            "translation": [
-                0.4999998,
-                0.75,
-                -1.25
-            ],
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                0.75,
-                0.75,
-                0.75
             ]
         },
         "44": {
@@ -682,6 +601,12 @@
             "bloom": {
                 "enabled": false
             }
+        },
+        "runtime": {
+            "visualizeColliders": true
+        },
+        "editor": {
+            "ids": "uuid"
         }
     },
     "animations": {

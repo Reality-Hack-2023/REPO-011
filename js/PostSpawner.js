@@ -1,9 +1,11 @@
 import { map } from '@firebase/util';
-import { textures } from '@wonderlandengine/api';
+import { textures, Collider } from '@wonderlandengine/api';
 import { getPosts, newPost, newComment, newLikes, db } from './firestore-api.js'
 import { planets } from './html-ui.js'
 
+
 WL.registerComponent('PostSpawner', {
+    size: {type: WL.Type.Float, default: 1},
     mesh: {type: WL.Type.Mesh},
     material: {type: WL.Type.Material},
     moon_mesh: {type: WL.Type.Mesh},
@@ -24,7 +26,12 @@ WL.registerComponent('PostSpawner', {
                         if(!planets.has(post.ref.id)){
                             
                             var newObj = WL.scene.addObject();
+
+                            this.size = 1 + (post.data().likes + post.data().comments.length) * 0.01
+                            newObj.scale([this.size, this.size, this.size])
+
                             var newMesh = newObj.addComponent("mesh");
+                            var newCollision = newObj.addComponent("collision", {extents: [this.size, this.size, this.size], collider: Collider.Sphere, group: 1});
                             var newInfo = newObj.addComponent("planetPostInfo");
                             newObj.addComponent("planetOnCollision");
                             
@@ -43,19 +50,18 @@ WL.registerComponent('PostSpawner', {
                                 moonMesh.material = this.moon_material;
                                 moonObj.addComponent('moonRotation', {speed: 360*Math.random()});
                             })
-                            if (planets.length == 0)
-                                newObj.translateWorld = this.object.translateWorld;
-                            else{
-                                //TESTING
+                            
+                            do{
                                 const minAngle = 0;
                                 const maxAngle = -180;
                                 const angle = Math.random() * (maxAngle - minAngle) + minAngle;
                                 const x = Math.cos(angle) * 10;
                                 const y = Math.sin(angle) * 10;
                                 newObj.setTranslationWorld([Math.abs(x),Math.abs(Math.floor(Math.random() * 7)),-Math.abs(y)]);
-                                //TESTING
-                                //newObj.setTranslationWorld([Math.floor(Math.random() * 12),Math.abs(Math.floor(Math.random() * 6)),Math.floor(Math.random() * 10)-12]);
-                            }
+                            }while(newObj.getComponent("collision").queryOverlaps().length != 0)
+                                
+                                
+                            
                             newObj.addComponent("planetRotation");
                             console.log(newObj.transformLocal);
                             planets.set(post.ref.id, {data: post.data(), object: newObj});
