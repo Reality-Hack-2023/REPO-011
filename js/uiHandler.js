@@ -1,3 +1,5 @@
+import { planets, currentlyClicked } from './html-ui.js'
+
 class CanvasKeyboard{
     constructor( width, canvasui, lang = "EN" ){
         const config = this.getConfig( lang );
@@ -1080,31 +1082,17 @@ WL.registerComponent('uiHandler', {
     },
     simplePanel: function(){
         const config = {
-            header:{
-                type: "text",
-                position:{ top:0 },
-                paddingTop: 30,
-                height: 70
-            },
             main:{
                 type: "text",
-                position:{ top:70 },
-                height: 372, // default height is 512 so this is 512 - header height (70) - footer height (70)
+                position:{ top:128 },
+                height: 256, // default height is 512 so this is 512 - header height (70) - footer height (70)
                 backgroundColor: "#bbb",
                 fontColor: "#000"
             },
-            footer:{
-                type: "text",
-                position:{ bottom:0 },
-                paddingTop: 30,
-                height: 70
-            }
         }
         
         const content = {
-            header: "Header",
-            main: "This is the main text",
-            footer: "Footer"
+            main: planets[currentlyClicked].data.text,
         }
         
         this.ui = new CanvasUI( content, config, this.object );

@@ -50,7 +50,7 @@ WL.registerComponent('planetOnCollision', {
                 });
 
                 if (postPreviewObj != null) {
-                    
+                    postPreviewObj.destroy();
                 }
 
                 selected = false;
