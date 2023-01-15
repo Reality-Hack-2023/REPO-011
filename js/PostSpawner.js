@@ -8,6 +8,9 @@ WL.registerComponent('PostSpawner', {
     size: {type: WL.Type.Float, default: 1},
     mesh: {type: WL.Type.Mesh},
     material: {type: WL.Type.Material},
+    material_onclick: {type: WL.Type.Material},
+    canvas_mesh: {type: WL.Type.Mesh},
+    canvas_material: {type: WL.Type.Material},
     moon_mesh: {type: WL.Type.Mesh},
     moon_material: {type: WL.Type.Material},
     postPreviewObj: {type: WL.Type.Object},
@@ -31,13 +34,15 @@ WL.registerComponent('PostSpawner', {
                             this.size = 1 + (post.data().likes + post.data().comments.length) * 0.01
                             newObj.scale([this.size, this.size, this.size])
 
-                            var newMesh = newObj.addComponent("mesh");
+                            var newMesh = newObj.addComponent("mesh", {mesh : this.mesh});
                             var newCollision = newObj.addComponent("collision", {extents: [this.size, this.size, this.size], collider: Collider.Sphere, group: 1});
                             var newInfo = newObj.addComponent("planetPostInfo");
+                            newObj.addComponent("cursor-target");
                             newObj.addComponent("planetOnCollision", {postPreviewObj: this.postPreviewObj});
                             
-                            newMesh.mesh = this.mesh;
-                            var mat =this.material.clone();
+                            
+                            // newMesh.mesh = this.mesh;
+                            var mat = this.material.clone();
                             console.log(this.textures);
                             newMesh.material = mat;
                             mat.diffuseTexture = this.textures[Math.floor(Math.random() * this.textures.length)];

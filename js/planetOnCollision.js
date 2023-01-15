@@ -12,14 +12,16 @@ WL.registerComponent('planetOnCollision', {
     },
     start: function() {
         var cursor = this.object.getComponent("cursor-target");
+        
         var selected = false;
-        cursor.addClickFunction( o=>{
+        cursor.addClickFunction( o =>{
             if (!selected) {
                 find_planet = this.object.getComponent("planetPostInfo");
                 if (find_planet != null) {
                     currentlyClicked.clicked = find_planet.planet_id;
+                    console.log("Clicked")
                 }
-                var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
+                var newMesh = this.object.getComponent("mesh");
                 newMesh.material = this.material_change;
 
                 var allInactiveButtons = document.querySelectorAll(".inactive_button");
