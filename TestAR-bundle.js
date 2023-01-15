@@ -14519,18 +14519,6 @@ h2 {
   width: 100%;
 }
 
-.postForm {
-  padding: 20px;
-  background-color: white;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  transition: all 0.2s ease-in-out;
-  position: absolute; /* add position */
-  top: 25%;  /* center the form vertically */
-  left: 50%; /* center the form horizontally */
-  transform: translate(-50%, -50%); /* adjust the position */
-}
-
 /* We disable "pointer-events" on the parent, because it needs to
  * let through any events to the canvas. But for any direct children
  * of the content, we still want clicking/hovering etc */
@@ -14539,38 +14527,20 @@ h2 {
 }
 </style>
 
-<div id="post-form" style="display: none;" class='content postForm'>
-  <form>
-    <label for="author">Author:</label>
-    <input type="text" id="author" name="author" required>
-    <br>
-    <label for="text">Text:</label>
-    <textarea id="text" name="text" required></textarea>
-    <br>
-    <button type="submit" id="submit-button" onclick="closeForm();newPost(author, text)">Submit</button>
-  </form>
-</div>
-
 <div class='button-container'>
   <div class='content'>
-  <button class="comment_button"><i class="fas fa-comment"></i></button>
+      <button class="comment_button" onclick="newComment()"><i class="fas fa-comment"></i></button>
   </div>
 
   <div class='content'>
-  <button class="comment_button"><i class="fas fa-heart"></i></button>
+      <button class="comment_button" onclick="newLikes()"><i class="fas fa-heart"></i></button>
   </div>
 
   <div class='content'>
-  <button class="comment_button" onclick="openForm()"><i class="fas fa-pen"></i></button>
+      <button class="comment_button" onclick="newPost()"><i class="fas fa-pen"></i></button>
   </div>
 </div>
 `;
-      window.openForm = function() {
-        document.getElementById("post-form").style.display = "block";
-      };
-      window.closeForm = function() {
-        document.getElementById("post-form").style.display = "none";
-      };
       WL.registerComponent("html-ui", {}, {
         start: function() {
           const div = document.createElement("div");
@@ -14646,6 +14616,66 @@ h2 {
     }
   });
 
+  // js/planetOnCollision.js
+  var require_planetOnCollision = __commonJS({
+    "js/planetOnCollision.js"() {
+      WL.registerComponent("planetOnCollision", {
+        material_org: { type: WL.Type.Material },
+        material_change: { type: WL.Type.Material }
+      }, {
+        init: function() {
+          console.log("init() with param", this.param);
+        },
+        start: function() {
+          var cursor = this.object.getComponent("cursor-target");
+          cursor.addHoverFunction((o) => {
+            var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
+            newMesh.material = this.material_change;
+          });
+          cursor.addUnHoverFunction((o) => {
+            var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
+            newMesh.material = this.material_org;
+          });
+        },
+        update: function(dt2) {
+        }
+      });
+    }
+  });
+
+  // js/planetSpawner.js
+  var require_planetSpawner = __commonJS({
+    "js/planetSpawner.js"() {
+      var spheres2 = [];
+      WL.registerComponent("planetSpawner", {
+        mesh: { type: WL.Type.Mesh },
+        material: { type: WL.Type.Material }
+      }, {
+        init: function() {
+          console.log("init() with param", this.param);
+        },
+        start: function() {
+          var cursor = this.object.getComponent("cursor-target");
+          cursor.addClickFunction((o) => {
+            var newObj = WL.scene.addObject();
+            var newMesh = newObj.addComponent("mesh");
+            newMesh.mesh = this.mesh;
+            newMesh.material = this.material;
+            if (spheres2.length == 0)
+              newObj.translateWorld = this.object.translateWorld;
+            else
+              newObj.setTranslationWorld(glMatrix.vec3.add([], spheres2[spheres2.length - 1].getTranslationWorld([]), [1.5, 0, 0]));
+            newObj.addComponent("planetRotation");
+            spheres2.push(newObj);
+            console.log(newObj.transformLocal);
+          });
+        },
+        update: function(dt2) {
+        }
+      });
+    }
+  });
+
   // js/bundle.js
   require_thwall_camera();
   require_components();
@@ -14653,6 +14683,8 @@ h2 {
   init_html_ui();
   init_PostSpawner();
   require_planetRotation();
+  require_planetOnCollision();
+  require_planetSpawner();
 })();
 /*! Bundled license information:
 
