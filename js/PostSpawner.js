@@ -32,7 +32,8 @@ WL.registerComponent('PostSpawner', {
                             
                             var newObj = WL.scene.addObject();
                             var newMesh = newObj.addComponent("mesh");
-                            var newInfo = newObj.addComponent("planetPostInfo")
+                            var newInfo = newObj.addComponent("planetPostInfo");
+                            newObj.addComponent("planetOnCollision");
                             
                             newMesh.mesh = this.mesh;
                             newMesh.material = this.material.clone();
