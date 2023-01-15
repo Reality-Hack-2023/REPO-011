@@ -11,13 +11,6 @@
                 },
                 {
                     "type": "html-ui"
-                },
-                {
-                    "type": "PostSpawner",
-                    "PostSpawner": {
-                        "mesh": "69",
-                        "material": "22"
-                    }
                 }
             ],
             "translation": [
@@ -221,13 +214,6 @@
                 null,
                 {
                     "type": "hit-test-location"
-                },
-                {
-                    "type": "spawn-mesh-on-select",
-                    "spawn-mesh-on-select": {
-                        "mesh": "8",
-                        "material": "22"
-                    }
                 }
             ],
             "translation": [
@@ -301,20 +287,20 @@
                 "file": "assets\\stylized_planet\\scene.gltf"
             },
             "translation": [
-                -1.043081283569336e-7,
-                2.069215,
-                1.933976
+                -8.940696716308596e-8,
+                2.0692152,
+                1.1999378
             ],
             "rotation": [
-                -0.6956251,
-                -0.0228981,
+                -0.6956252,
+                -0.0228982,
                 0.022194,
                 0.7176967
             ],
             "scale": [
-                0.999993,
-                0.9999964,
-                0.9999883
+                0.9999873,
+                1.0,
+                0.9999881
             ],
             "components": [
                 {
@@ -337,101 +323,52 @@
                 }
             ]
         },
-        "71": {
+        "80": {
             "link": {
                 "name": "root<Sketchfab_model",
                 "file": "assets\\stylized_planet\\scene.gltf"
             },
-            "parent": "70"
+            "parent": "79"
         },
-        "72": {
+        "81": {
             "link": {
                 "name": "GLTF_SceneRootNode<root<Sketchfab_model",
                 "file": "assets\\stylized_planet\\scene.gltf"
             },
-            "parent": "79",
-            "translation": [
-                0.0039471,
-                -1.9802745,
-                0.0617461
-            ],
-            "rotation": [
-                -8.754432201385498e-8,
-                0.0,
-                1.3853352243131667e-8,
-                1.0
-            ],
-            "scale": [
-                1.0000051,
-                1.0,
-                1.0000236
-            ]
+            "parent": "80"
         },
-        "73": {
+        "82": {
             "link": {
                 "name": "Clouds_1<GLTF_SceneRootNode<root<Sketchfab_model",
                 "file": "assets\\stylized_planet\\scene.gltf"
             },
-            "parent": "72",
-            "components": [
-                {
-                    "animation": {
-                        "autoplay": true
-                    }
-                }
-            ]
+            "parent": "81"
         },
-        "74": {
+        "83": {
             "link": {
                 "name": "Object_4<Clouds_1<GLTF_SceneRootNode<root<Sketchfab_model",
                 "file": "assets\\stylized_planet\\scene.gltf"
             },
-            "parent": "73",
-            "translation": [
-                0.1265618,
-                1.9813879,
-                -0.0620267
-            ],
-            "rotation": [
-                -0.0,
-                -1.0943040251731873e-8,
-                -0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0000058,
-                1.0000058
-            ]
+            "parent": "82"
         },
-        "75": {
+        "84": {
             "link": {
                 "name": "Planet_2<GLTF_SceneRootNode<root<Sketchfab_model",
                 "file": "assets\\stylized_planet\\scene.gltf"
             },
-            "parent": "72"
+            "parent": "81"
         },
-        "76": {
+        "85": {
             "link": {
                 "name": "Object_6<Planet_2<GLTF_SceneRootNode<root<Sketchfab_model",
                 "file": "assets\\stylized_planet\\scene.gltf"
             },
-            "parent": "75",
-            "translation": [
-                0.1215036,
-                1.9021999,
-                -0.0595478
-            ],
-            "rotation": [
-                -0.0,
-                -1.7229467630386353e-8,
-                -0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.000009,
-                1.000009
+            "parent": "84",
+            "components": [
+                null,
+                {
+                    "type": "planetRotation"
+                }
             ]
         },
         "86": {
@@ -441,7 +378,7 @@
                     "type": "mesh",
                     "mesh": {
                         "mesh": "9",
-                        "material": "87"
+                        "material": "91"
                     }
                 }
             ],
@@ -560,8 +497,8 @@
                 "shininess": 10,
                 "ambientColor": [
                     0.317647,
-                    0.0,
-                    0.2165777,
+                    0.0024913,
+                    0.2173704,
                     1.0
                 ]
             }
@@ -646,12 +583,56 @@
             }
         },
         "87": {
-            "name": "white white",
+            "name": "white4",
             "Phong": {
                 "ambientColor": [
-                    0.6509803,
-                    0.638216,
-                    0.638216,
+                    0.9254902,
+                    0.9182314,
+                    0.9182314,
+                    1.0
+                ]
+            }
+        },
+        "88": {
+            "name": "white3",
+            "Phong": {
+                "ambientColor": [
+                    0.6862745,
+                    0.6862745,
+                    0.6862745,
+                    1.0
+                ]
+            }
+        },
+        "89": {
+            "name": "white2",
+            "Phong": {
+                "ambientColor": [
+                    0.4666666,
+                    0.4630064,
+                    0.4630064,
+                    1.0
+                ]
+            }
+        },
+        "90": {
+            "name": "white1",
+            "Phong": {
+                "ambientColor": [
+                    0.2745097,
+                    0.2712802,
+                    0.2712802,
+                    1.0
+                ]
+            }
+        },
+        "91": {
+            "name": "white0",
+            "Phong": {
+                "ambientColor": [
+                    0.1098039,
+                    0.1076508,
+                    0.1076508,
                     1.0
                 ]
             }

@@ -34,7 +34,7 @@ WL.registerComponent('PostSpawner', {
                             
                             newMesh.mesh = this.mesh;
                             newMesh.material = this.material.clone();
-                            newMesh.material.diffuseTexture = ...
+                            //newMesh.material.diffuseTexture = ...
 
                             newInfo.planet_id = post.ref.id;
 

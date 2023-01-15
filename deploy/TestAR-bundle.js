@@ -14575,9 +14575,9 @@ input:focus ~ .input-border {
     <input class="input" placeholder="Enter your name" id="author" name="author" required>
     <br>
     <label for="text">Text:</label>
-    <textarea class="input" Placeholder="Type here" name="text" required></textarea>
+    <textarea class="input" Placeholder="Type here" name="text" id="text" required></textarea>
     <br>
-    <button type="submit" id="submit-button" onclick="closeForm()">Submit</button>
+    <button type="button" id="submit-button" onclick="closeForm()">Submit</button>
   </form>
 </div>
 
@@ -14600,7 +14600,7 @@ input:focus ~ .input-border {
       };
       window.closeForm = function() {
         document.getElementById("post-form").style.display = "none";
-        newPost(db, document.getElementById("author"), document.getElementById("text"));
+        newPost(db, document.getElementById("author").value, document.getElementById("text").value);
       };
       WL.registerComponent("html-ui", {}, {
         start: function() {
@@ -14618,12 +14618,2461 @@ input:focus ~ .input-border {
     }
   });
 
+  // node_modules/wasm-feature-detect/dist/esm/index.js
+  var init_esm = __esm({
+    "node_modules/wasm-feature-detect/dist/esm/index.js"() {
+    }
+  });
+
+  // node_modules/@wonderlandengine/api/wonderland.js
+  function allocateTempMemory(size) {
+    console.log("Allocating temp mem:", size);
+    _tempMemSize = size;
+    if (_tempMem)
+      _free(_tempMem);
+    _tempMem = _malloc(_tempMemSize);
+    updateTempMemory();
+  }
+  function requireTempMem(size) {
+    if (_tempMemSize >= size)
+      return;
+    allocateTempMemory(Math.ceil(size / 1024) * 1024);
+  }
+  function updateTempMemory() {
+    _tempMemFloat = new Float32Array(HEAP8.buffer, _tempMem, _tempMemSize >> 2);
+    _tempMemInt = new Int32Array(HEAP8.buffer, _tempMem, _tempMemSize >> 2);
+    _tempMemUint32 = new Uint32Array(HEAP8.buffer, _tempMem, _tempMemSize >> 2);
+    _tempMemUint16 = new Uint16Array(HEAP8.buffer, _tempMem, _tempMemSize >> 1);
+    _tempMemUint8 = new Uint8Array(HEAP8.buffer, _tempMem, _tempMemSize);
+  }
+  function getTempBufferU16(count) {
+    requireTempMem(count * 2);
+    return _tempMemUint16;
+  }
+  function getTempBufferF32(count) {
+    requireTempMem(count * 4);
+    return _tempMemFloat;
+  }
+  function isString(value) {
+    return value && (typeof value === "string" || value.constructor === String);
+  }
+  function _wrapObject(objectId) {
+    const o = ObjectCache[objectId] || (ObjectCache[objectId] = new $Object(objectId));
+    o.objectId = objectId;
+    return o;
+  }
+  function _wrapComponent(type, componentType, componentId) {
+    if (componentId < 0)
+      return null;
+    const c = ComponentCache[componentType] || (ComponentCache[componentType] = []);
+    if (c[componentId]) {
+      return c[componentId];
+    }
+    let component;
+    if (type == "collision") {
+      component = new CollisionComponent(componentType, componentId);
+    } else if (type == "text") {
+      component = new TextComponent(componentType, componentId);
+    } else if (type == "view") {
+      component = new ViewComponent(componentType, componentId);
+    } else if (type == "mesh") {
+      component = new MeshComponent(componentType, componentId);
+    } else if (type == "input") {
+      component = new InputComponent(componentType, componentId);
+    } else if (type == "light") {
+      component = new LightComponent(componentType, componentId);
+    } else if (type == "animation") {
+      component = new AnimationComponent(componentType, componentId);
+    } else if (type == "physx") {
+      component = new PhysXComponent(componentType, componentId);
+    } else {
+      const typeIndex = _WL._componentTypeIndices[type];
+      const constructor = _WL._componentTypes[typeIndex];
+      component = new constructor();
+    }
+    component._manager = componentType;
+    component._id = componentId;
+    c[componentId] = component;
+    return component;
+  }
+  var ComponentCache, ObjectCache, EXCLUDED_COMPONENT_PROPERTIES, Type, _componentDefaults, Collider, Alignment, Justification, TextEffect, InputType, LightType, AnimationState, ForceMode, CollisionEventType, Shape, MeshAttribute, MaterialParamType, xrSession, physics, _images, _tempMem, _tempMemSize, _tempMemFloat, _tempMemInt, _tempMemUint32, _tempMemUint16, _tempMemUint8, UP_VECTOR, Component2, CollisionComponent, TextComponent, ViewComponent, InputComponent, LightComponent, AnimationComponent, MeshComponent, PhysXComponent, MeshIndexType, Mesh, MeshAttributeAccessor, Material, tempCanvas, Texture, textures, Animation, $Object, Skin;
+  var init_wonderland = __esm({
+    "node_modules/@wonderlandengine/api/wonderland.js"() {
+      ComponentCache = {};
+      ObjectCache = [];
+      EXCLUDED_COMPONENT_PROPERTIES = ["_id", "_manager", "type", "_type", "active"];
+      (function(Type2) {
+        Type2[Type2["Bool"] = 2] = "Bool";
+        Type2[Type2["Int"] = 4] = "Int";
+        Type2[Type2["Float"] = 8] = "Float";
+        Type2[Type2["String"] = 16] = "String";
+        Type2[Type2["Enum"] = 32] = "Enum";
+        Type2[Type2["Object"] = 64] = "Object";
+        Type2[Type2["Mesh"] = 128] = "Mesh";
+        Type2[Type2["Texture"] = 256] = "Texture";
+        Type2[Type2["Material"] = 512] = "Material";
+        Type2[Type2["Animation"] = 1024] = "Animation";
+        Type2[Type2["Skin"] = 2048] = "Skin";
+      })(Type || (Type = {}));
+      _componentDefaults = new Array(6);
+      _componentDefaults[Type.Bool] = false;
+      _componentDefaults[Type.Int] = 0;
+      _componentDefaults[Type.Float] = 0;
+      _componentDefaults[Type.String] = "";
+      _componentDefaults[Type.Enum] = 0;
+      _componentDefaults[Type.Object] = null;
+      _componentDefaults[Type.Mesh] = null;
+      _componentDefaults[Type.Texture] = null;
+      _componentDefaults[Type.Material] = null;
+      _componentDefaults[Type.Animation] = null;
+      _componentDefaults[Type.Skin] = null;
+      (function(Collider2) {
+        Collider2[Collider2["Sphere"] = 0] = "Sphere";
+        Collider2[Collider2["AxisAlignedBox"] = 1] = "AxisAlignedBox";
+        Collider2[Collider2["Box"] = 2] = "Box";
+      })(Collider || (Collider = {}));
+      (function(Alignment2) {
+        Alignment2[Alignment2["Left"] = 1] = "Left";
+        Alignment2[Alignment2["Center"] = 2] = "Center";
+        Alignment2[Alignment2["Right"] = 3] = "Right";
+      })(Alignment || (Alignment = {}));
+      (function(Justification2) {
+        Justification2[Justification2["Line"] = 1] = "Line";
+        Justification2[Justification2["Middle"] = 2] = "Middle";
+        Justification2[Justification2["Top"] = 3] = "Top";
+        Justification2[Justification2["Bottom"] = 4] = "Bottom";
+      })(Justification || (Justification = {}));
+      (function(TextEffect2) {
+        TextEffect2[TextEffect2["None"] = 0] = "None";
+        TextEffect2[TextEffect2["Outline"] = 1] = "Outline";
+      })(TextEffect || (TextEffect = {}));
+      (function(InputType2) {
+        InputType2[InputType2["Head"] = 0] = "Head";
+        InputType2[InputType2["EyeLeft"] = 1] = "EyeLeft";
+        InputType2[InputType2["EyeRight"] = 2] = "EyeRight";
+        InputType2[InputType2["ControllerLeft"] = 3] = "ControllerLeft";
+        InputType2[InputType2["ControllerRight"] = 4] = "ControllerRight";
+        InputType2[InputType2["RayLeft"] = 5] = "RayLeft";
+        InputType2[InputType2["RayRight"] = 6] = "RayRight";
+      })(InputType || (InputType = {}));
+      (function(LightType2) {
+        LightType2[LightType2["Point"] = 1] = "Point";
+        LightType2[LightType2["Spot"] = 2] = "Spot";
+        LightType2[LightType2["Sun"] = 3] = "Sun";
+      })(LightType || (LightType = {}));
+      (function(AnimationState2) {
+        AnimationState2[AnimationState2["Playing"] = 1] = "Playing";
+        AnimationState2[AnimationState2["Paused"] = 2] = "Paused";
+        AnimationState2[AnimationState2["Stopped"] = 3] = "Stopped";
+      })(AnimationState || (AnimationState = {}));
+      (function(ForceMode2) {
+        ForceMode2[ForceMode2["Force"] = 0] = "Force";
+        ForceMode2[ForceMode2["Impulse"] = 1] = "Impulse";
+        ForceMode2[ForceMode2["VelocityChange"] = 2] = "VelocityChange";
+        ForceMode2[ForceMode2["Acceleration"] = 3] = "Acceleration";
+      })(ForceMode || (ForceMode = {}));
+      (function(CollisionEventType2) {
+        CollisionEventType2[CollisionEventType2["Touch"] = 0] = "Touch";
+        CollisionEventType2[CollisionEventType2["TouchLost"] = 1] = "TouchLost";
+        CollisionEventType2[CollisionEventType2["TriggerTouch"] = 2] = "TriggerTouch";
+        CollisionEventType2[CollisionEventType2["TriggerTouchLost"] = 3] = "TriggerTouchLost";
+      })(CollisionEventType || (CollisionEventType = {}));
+      (function(Shape2) {
+        Shape2[Shape2["None"] = 0] = "None";
+        Shape2[Shape2["Sphere"] = 1] = "Sphere";
+        Shape2[Shape2["Capsule"] = 2] = "Capsule";
+        Shape2[Shape2["Box"] = 3] = "Box";
+        Shape2[Shape2["Plane"] = 4] = "Plane";
+        Shape2[Shape2["ConvexMesh"] = 5] = "ConvexMesh";
+        Shape2[Shape2["TriangleMesh"] = 6] = "TriangleMesh";
+      })(Shape || (Shape = {}));
+      (function(MeshAttribute2) {
+        MeshAttribute2[MeshAttribute2["Position"] = 0] = "Position";
+        MeshAttribute2[MeshAttribute2["Tangent"] = 1] = "Tangent";
+        MeshAttribute2[MeshAttribute2["Normal"] = 2] = "Normal";
+        MeshAttribute2[MeshAttribute2["TextureCoordinate"] = 3] = "TextureCoordinate";
+        MeshAttribute2[MeshAttribute2["Color"] = 4] = "Color";
+        MeshAttribute2[MeshAttribute2["JointId"] = 5] = "JointId";
+        MeshAttribute2[MeshAttribute2["JointWeight"] = 6] = "JointWeight";
+        MeshAttribute2[MeshAttribute2["SecondaryJointId"] = 7] = "SecondaryJointId";
+        MeshAttribute2[MeshAttribute2["SecondaryJointWeight"] = 8] = "SecondaryJointWeight";
+      })(MeshAttribute || (MeshAttribute = {}));
+      (function(MaterialParamType2) {
+        MaterialParamType2[MaterialParamType2["UnsignedInt"] = 0] = "UnsignedInt";
+        MaterialParamType2[MaterialParamType2["Int"] = 1] = "Int";
+        MaterialParamType2[MaterialParamType2["Float"] = 2] = "Float";
+        MaterialParamType2[MaterialParamType2["Sampler"] = 3] = "Sampler";
+        MaterialParamType2[MaterialParamType2["Font"] = 4] = "Font";
+      })(MaterialParamType || (MaterialParamType = {}));
+      xrSession = null;
+      physics = void 0;
+      _images = [];
+      _tempMem = null;
+      _tempMemSize = 0;
+      _tempMemFloat = null;
+      _tempMemInt = null;
+      _tempMemUint32 = null;
+      _tempMemUint16 = null;
+      _tempMemUint8 = null;
+      UP_VECTOR = [0, 1, 0];
+      Component2 = class {
+        /**
+         * Create a new instance
+         *
+         * @param managerIndex Index of the manager.
+         * @param id WASM component instance index.
+         *
+         * @hidden
+         */
+        constructor(managerIndex = -1, id = -1) {
+          this._manager = managerIndex;
+          this._id = id;
+          this._object = null;
+          this._type = null;
+        }
+        /** The name of this component's type */
+        get type() {
+          return this._type || $Object._typeNameFor(this._manager);
+        }
+        /** The object this component is attached to. */
+        get object() {
+          if (!this._object) {
+            const objectId = _wl_component_get_object(this._manager, this._id);
+            this._object = _wrapObject(objectId);
+          }
+          return this._object;
+        }
+        /**
+         * Set whether this component is active.
+         *
+         * Activating/deactivating a component comes at a small cost of reordering
+         * components in the respective component manager. This function therefore
+         * is not a trivial assignment.
+         *
+         * Does nothing if the component is already activated/deactivated.
+         *
+         * @param active New active state.
+         */
+        set active(active) {
+          _wl_component_setActive(this._manager, this._id, active);
+        }
+        /**
+         * Whether this component is active
+         */
+        get active() {
+          return _wl_component_isActive(this._manager, this._id) != 0;
+        }
+        /**
+         * Remove this component from its objects and destroy it.
+         *
+         * It is best practice to set the component to `null` after,
+         * to ensure it does not get used later.
+         *
+         * ```js
+         *    c.destroy();
+         *    c = null;
+         * ```
+         * @since 0.9.0
+         */
+        destroy() {
+          _wl_component_remove(this._manager, this._id);
+          this._manager = void 0;
+          this._id = void 0;
+        }
+        /**
+         * Checks equality by comparing whether the wrapped native component ids
+         * and component manager types are equal.
+         *
+         * @param otherComponent Component to check equality with.
+         * @returns Whether this component equals the given component.
+         */
+        equals(otherComponent) {
+          if (!otherComponent)
+            return false;
+          return this._manager == otherComponent._manager && this._id == otherComponent._id;
+        }
+      };
+      CollisionComponent = class extends Component2 {
+        /** Collision component collider */
+        get collider() {
+          return _wl_collision_component_get_collider(this._id);
+        }
+        /**
+         * Set collision component collider.
+         *
+         * @param collider Collider of the collision component.
+         */
+        set collider(collider) {
+          _wl_collision_component_set_collider(this._id, collider);
+        }
+        /**
+         * Collision component extents.
+         *
+         * If {@link collider} returns {@link Collider.Sphere}, only the first
+         * component of the returned vector is used.
+         */
+        get extents() {
+          return new Float32Array(HEAPF32.buffer, _wl_collision_component_get_extents(this._id), 3);
+        }
+        /**
+         * Set collision component extents.
+         *
+         * If {@link collider} returns {@link Collider.Sphere}, only the first
+         * component of the passed vector is used.
+         *
+         * Example:
+         *
+         * ```js
+         * // Spans 1 unit on the x-axis, 2 on the y-axis, 3 on the z-axis.
+         * collision.extent = [1, 2, 3];
+         * ```
+         *
+         * @param extents Extents of the collision component, expects a
+         *      3 component array.
+         */
+        set extents(extents) {
+          this.extents.set(extents);
+        }
+        /**
+         * Collision component group.
+         *
+         * The groups is a bitmask that is compared to other components in {@link CollisionComponent#queryOverlaps}
+         * or the group in {@link Scene#rayCast}.
+         *
+         * Colliders that have no common groups will not overlap with each other. If a collider
+         * has none of the groups set for {@link Scene#rayCast}, the ray will not hit it.
+         *
+         * Each bit represents belonging to a group, see example.
+         *
+         * ```js
+         *    // c belongs to group 2
+         *    c.group = (1 << 2);
+         *
+         *    // c belongs to group 0
+         *    c.group = (1 << 0);
+         *
+         *    // c belongs to group 0 *and* 2
+         *    c.group = (1 << 0) | (1 << 2);
+         *
+         *    (c.group & (1 << 2)) != 0; // true
+         *    (c.group & (1 << 7)) != 0; // false
+         * ```
+         */
+        get group() {
+          return _wl_collision_component_get_group(this._id);
+        }
+        /**
+         * Set collision component group.
+         *
+         * @param group Group mask of the collision component.
+         */
+        set group(group) {
+          _wl_collision_component_set_group(this._id, group);
+        }
+        /**
+         * Query overlapping objects.
+         *
+         * Usage:
+         *
+         * ```js
+         * const collision = object.getComponent('collision');
+         * const overlaps = collision.queryOverlaps();
+         * for(const otherCollision of overlaps) {
+         *     const otherObject = otherCollision.object;
+         *     console.log(`Collision with object ${otherObject.objectId}`);
+         * }
+         * ```
+         *
+         * @returns Collision components overlapping this collider.
+         */
+        queryOverlaps() {
+          const count = _wl_collision_component_query_overlaps(this._id, _tempMem, _tempMemSize >> 1);
+          let overlaps = new Array(count);
+          for (let i = 0; i < count; ++i) {
+            overlaps[i] = new CollisionComponent(this._manager, _tempMemUint16[i]);
+          }
+          return overlaps;
+        }
+      };
+      TextComponent = class extends Component2 {
+        /** Text component alignment. */
+        get alignment() {
+          return _wl_text_component_get_horizontal_alignment(this._id);
+        }
+        /**
+         * Set text component alignment.
+         *
+         * @param alignment Alignment for the text component.
+         */
+        set alignment(alignment) {
+          _wl_text_component_set_horizontal_alignment(this._id, alignment);
+        }
+        /** Text component justification. */
+        get justification() {
+          return _wl_text_component_get_vertical_alignment(this._id);
+        }
+        /**
+         * Set text component justification.
+         *
+         * @param justification Justification for the text component.
+         */
+        set justification(justification) {
+          _wl_text_component_set_vertical_alignment(this._id, justification);
+        }
+        /** Text component character spacing. */
+        get characterSpacing() {
+          return _wl_text_component_get_character_spacing(this._id);
+        }
+        /**
+         * Set text component character spacing.
+         *
+         * @param spacing Character spacing for the text component.
+         */
+        set characterSpacing(spacing) {
+          _wl_text_component_set_character_spacing(this._id, spacing);
+        }
+        /** Text component line spacing. */
+        get lineSpacing() {
+          return _wl_text_component_get_line_spacing(this._id);
+        }
+        /**
+         * Set text component line spacing
+         *
+         * @param spacing Line spacing for the text component
+         */
+        set lineSpacing(spacing) {
+          _wl_text_component_set_line_spacing(this._id, spacing);
+        }
+        /** Text component effect. */
+        get effect() {
+          return _wl_text_component_get_effect(this._id);
+        }
+        /**
+         * Set text component effect
+         *
+         * @param effect Effect for the text component
+         */
+        set effect(effect) {
+          _wl_text_component_set_effect(this._id, effect);
+        }
+        /** Text component text. */
+        get text() {
+          return UTF8ToString(_wl_text_component_get_text(this._id));
+        }
+        /**
+         * Set text component text.
+         *
+         * @param text Text of the text component.
+         */
+        set text(text) {
+          const strLen = lengthBytesUTF8(text) + 1;
+          const ptr = _malloc(strLen);
+          stringToUTF8(text, ptr, strLen);
+          _wl_text_component_set_text(this._id, ptr);
+          _free(ptr);
+        }
+        /**
+         * Set material to render the text with.
+         *
+         * @param material New material.
+         */
+        set material(material) {
+          const matIndex = material ? material._index : 0;
+          _wl_text_component_set_material(this._id, matIndex);
+        }
+        /** Material used to render the text. */
+        get material() {
+          const id = _wl_text_component_get_material(this._id);
+          return id > 0 ? new Material(id) : null;
+        }
+      };
+      ViewComponent = class extends Component2 {
+        /** Projection matrix. */
+        get projectionMatrix() {
+          return new Float32Array(HEAPF32.buffer, _wl_view_component_get_projection_matrix(this._id), 16);
+        }
+        /** ViewComponent near clipping plane value. */
+        get near() {
+          return _wl_view_component_get_near(this._id);
+        }
+        /**
+         * Set near clipping plane distance for the view.
+         *
+         * If an XR session is active, the change will apply in the
+         * following frame, otherwise the change is immediate.
+         *
+         * @param near Near depth value.
+         */
+        set near(near) {
+          _wl_view_component_set_near(this._id, near);
+        }
+        /** Far clipping plane value. */
+        get far() {
+          return _wl_view_component_get_far(this._id);
+        }
+        /**
+         * Set far clipping plane distance for the view.
+         *
+         * If an XR session is active, the change will apply in the
+         * following frame, otherwise the change is immediate.
+         *
+         * @param far Near depth value.
+         */
+        set far(far) {
+          _wl_view_component_set_far(this._id, far);
+        }
+        /**
+         * Get the horizontal field of view for the view, **in degrees**.
+         *
+         * If an XR session is active, this returns the field of view reported by
+         * the device, regardless of the fov that was set.
+         */
+        get fov() {
+          return _wl_view_component_get_fov(this._id);
+        }
+        /**
+         * Set the horizontal field of view for the view, **in degrees**.
+         *
+         * If an XR session is active, the field of view reported by the device is
+         * used and this value is ignored. After the XR session ends, the new value
+         * is applied.
+         *
+         * @param fov Horizontal field of view, **in degrees**.
+         */
+        set fov(fov) {
+          _wl_view_component_set_fov(this._id, fov);
+        }
+      };
+      InputComponent = class extends Component2 {
+        /** Input component type */
+        get inputType() {
+          return _wl_input_component_get_type(this._id);
+        }
+        /**
+         * Set input component type.
+         *
+         * @params New input component type.
+         */
+        set inputType(type) {
+          _wl_input_component_set_type(this._id, type);
+        }
+        /**
+         * WebXR Device API input source associated with this input component,
+         * if type {@link InputType.ControllerLeft} or {@link InputType.ControllerRight}.
+         */
+        get xrInputSource() {
+          if (xrSession) {
+            for (let inputSource of xrSession.inputSources) {
+              if (inputSource.handedness == this.handedness) {
+                return inputSource;
+              }
+            }
+          }
+          return null;
+        }
+        /**
+         * 'left', 'right' or {@link null} depending on the {@link InputComponent#inputType}.
+         */
+        get handedness() {
+          const inputType = this.inputType;
+          if (inputType == InputType.ControllerRight || inputType == InputType.RayRight || inputType == InputType.EyeRight)
+            return "right";
+          if (inputType == InputType.ControllerLeft || inputType == InputType.RayLeft || inputType == InputType.EyeLeft)
+            return "left";
+          return null;
+        }
+      };
+      LightComponent = class extends Component2 {
+        /** View on the light color */
+        get color() {
+          return new Float32Array(HEAPF32.buffer, _wl_light_component_get_color(this._id), 4);
+        }
+        /** Light type. */
+        get lightType() {
+          return _wl_light_component_get_type(this._id);
+        }
+        /**
+         * Set light type.
+         *
+         * @param lightType Type of the light component.
+         */
+        set lightType(t) {
+          _wl_light_component_set_type(this._id, t);
+        }
+      };
+      AnimationComponent = class extends Component2 {
+        /**
+         * Set animation to play.
+         *
+         * Make sure to {@link Animation#retarget} the animation to affect the
+         * right objects.
+         *
+         * @param anim Animation to play.
+         */
+        set animation(anim) {
+          _wl_animation_component_set_animation(this._id, anim._index);
+        }
+        /** Animation set for this component */
+        get animation() {
+          return new Animation(_wl_animation_component_get_animation(this._id));
+        }
+        /**
+         * Set play count. Set to `0` to loop indefinitely.
+         *
+         * @param playCount Number of times to repeat the animation.
+         */
+        set playCount(playCount) {
+          _wl_animation_component_set_playCount(this._id, playCount);
+        }
+        /** Number of times the animation is played. */
+        get playCount() {
+          return _wl_animation_component_get_playCount(this._id);
+        }
+        /**
+         * Set speed. Set to negative values to run the animation backwards.
+         *
+         * Setting speed has an immediate effect for the current frame's update
+         * and will continue with the speed from the current point in the animation.
+         *
+         * @param speed New speed at which to play the animation.
+         * @since 0.8.10
+         */
+        set speed(speed) {
+          _wl_animation_component_set_speed(this._id, speed);
+        }
+        /**
+         * Speed factor at which the animation is played.
+         *
+         * @since 0.8.10
+         */
+        get speed() {
+          return _wl_animation_component_get_speed(this._id);
+        }
+        /** Current playing state of the animation */
+        get state() {
+          return _wl_animation_component_state(this._id);
+        }
+        /** Play animation. */
+        play() {
+          _wl_animation_component_play(this._id);
+        }
+        /** Stop animation. */
+        stop() {
+          _wl_animation_component_stop(this._id);
+        }
+        /** Pause animation. */
+        pause() {
+          _wl_animation_component_pause(this._id);
+        }
+      };
+      MeshComponent = class extends Component2 {
+        /**
+         * Set material to render the mesh with.
+         *
+         * @param material Material to render the mesh with.
+         */
+        set material(material) {
+          _wl_mesh_component_set_material(this._id, material ? material._index : 0);
+        }
+        /** Material used to render the mesh. */
+        get material() {
+          const id = _wl_mesh_component_get_material(this._id);
+          return id > 0 ? new Material(id) : null;
+        }
+        /** Mesh rendered by this component. */
+        get mesh() {
+          return new Mesh(_wl_mesh_component_get_mesh(this._id));
+        }
+        /**
+         * Set mesh to rendered with this component.
+         *
+         * @param mesh Mesh rendered by this component.
+         */
+        set mesh(mesh) {
+          _wl_mesh_component_set_mesh(this._id, mesh ? mesh._index : 0);
+        }
+        /** Skin for this mesh component. */
+        get skin() {
+          return new Skin(_wl_mesh_component_get_skin(this._id));
+        }
+        /**
+         * Set skin to transform this mesh component.
+         *
+         * @param {?Skin} skin Skin to use for rendering skinned meshes.
+         */
+        set skin(skin) {
+          _wl_mesh_component_set_skin(this._id, skin._index);
+        }
+      };
+      PhysXComponent = class extends Component2 {
+        /**
+         * Set whether this rigid body is static.
+         *
+         * Setting this property only takes effect once the component
+         * switches from inactive to active.
+         *
+         * @param b Whether the rigid body should be static.
+         */
+        set static(b2) {
+          _wl_physx_component_set_static(this._id, b2);
+        }
+        /**
+         * Whether this rigid body is static.
+         *
+         * This property returns whether the rigid body is *effectively*
+         * static. If static property was set while the rigid body was
+         * active, it will not take effect until the rigid body is set
+         * inactive and active again. Until the component is set inactive,
+         * this getter will return whether the rigidbody is actually
+         * static.
+         */
+        get static() {
+          return !!_wl_physx_component_get_static(this._id);
+        }
+        /**
+         * Set whether this rigid body is kinematic.
+         *
+         * @param b Whether the rigid body should be kinematic.
+         */
+        set kinematic(b2) {
+          _wl_physx_component_set_kinematic(this._id, b2);
+        }
+        /**
+         * Whether this rigid body is kinematic.
+         */
+        get kinematic() {
+          return !!_wl_physx_component_get_kinematic(this._id);
+        }
+        /**
+         * Set the shape for collision detection.
+         *
+         * @param s New shape.
+         * @since 0.8.5
+         */
+        set shape(s) {
+          _wl_physx_component_set_shape(this._id, s);
+        }
+        /** The shape for collision detection. */
+        get shape() {
+          return _wl_physx_component_get_shape(this._id);
+        }
+        /**
+         * Set additional data for the shape.
+         *
+         * Retrieved only from {@link PhysXComponent#shapeData}.
+         * @since 0.8.10
+         */
+        set shapeData(d2) {
+          if (d2 == null || ![Shape.TriangleMesh, Shape.ConvexMesh].includes(this.shape))
+            return;
+          _wl_physx_component_set_shape_data(this._id, d2.index);
+        }
+        /**
+         * Additional data for the shape.
+         *
+         * `null` for {@link Shape} values: `None`, `Sphere`, `Capsule`, `Box`, `Plane`.
+         * `{index: n}` for `TriangleMesh` and `ConvexHull`.
+         *
+         * This data is currently only for passing onto or creating other {@link PhysXComponent}.
+         * @since 0.8.10
+         */
+        get shapeData() {
+          if (![Shape.TriangleMesh, Shape.ConvexMesh].includes(this.shape))
+            return null;
+          return { index: _wl_physx_component_get_shape_data(this._id) };
+        }
+        /**
+         * Set the shape extents for collision detection.
+         *
+         * @param e New extents for the shape.
+         * @since 0.8.5
+         */
+        set extents(e) {
+          this.extents.set(e);
+        }
+        /**
+         * The shape extents for collision detection.
+         */
+        get extents() {
+          const ptr = _wl_physx_component_get_extents(this._id);
+          return new Float32Array(HEAPF32.buffer, ptr, 3);
+        }
+        /**
+         * Get staticFriction.
+         */
+        get staticFriction() {
+          return _wl_physx_component_get_staticFriction(this._id);
+        }
+        /**
+         * Set staticFriction.
+         * @param v New staticFriction.
+         */
+        set staticFriction(v2) {
+          _wl_physx_component_set_staticFriction(this._id, v2);
+        }
+        /**
+         * Get dynamicFriction.
+         */
+        get dynamicFriction() {
+          return _wl_physx_component_get_dynamicFriction(this._id);
+        }
+        /**
+         * Set dynamicFriction
+         * @param v New dynamicDamping.
+         */
+        set dynamicFriction(v2) {
+          _wl_physx_component_set_dynamicFriction(this._id, v2);
+        }
+        /**
+         * Get bounciness.
+         * @since 0.9.0
+         */
+        get bounciness() {
+          return _wl_physx_component_get_bounciness(this._id);
+        }
+        /**
+         * Set bounciness.
+         * @param v New bounciness.
+         * @since 0.9.0
+         */
+        set bounciness(v2) {
+          _wl_physx_component_set_bounciness(this._id, v2);
+        }
+        /**
+         * Get linearDamping/
+         */
+        get linearDamping() {
+          return _wl_physx_component_get_linearDamping(this._id);
+        }
+        /**
+         * Set linearDamping.
+         * @param v New linearDamping.
+         */
+        set linearDamping(v2) {
+          _wl_physx_component_set_linearDamping(this._id, v2);
+        }
+        /** Get angularDamping. */
+        get angularDamping() {
+          return _wl_physx_component_get_angularDamping(this._id);
+        }
+        /**
+         * Set angularDamping.
+         * @param v New angularDamping.
+         */
+        set angularDamping(v2) {
+          _wl_physx_component_set_angularDamping(this._id, v2);
+        }
+        /**
+         * Set linear velocity.
+         *
+         * [PhysX Manual - "Velocity"](https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/physxguide/Manual/RigidBodyDynamics.html#velocity)
+         *
+         * Has no effect, if the component is not active.
+         *
+         * @param v New linear velocity.
+         */
+        set linearVelocity(v2) {
+          _wl_physx_component_set_linearVelocity(this._id, v2[0], v2[1], v2[2]);
+        }
+        /** Linear velocity or `[0, 0, 0]` if the component is not active. */
+        get linearVelocity() {
+          _wl_physx_component_get_linearVelocity(this._id, _tempMem);
+          return new Float32Array(HEAPF32.buffer, _tempMem, 3);
+        }
+        /**
+         * Set angular velocity
+         *
+         * [PhysX Manual - "Velocity"](https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/physxguide/Manual/RigidBodyDynamics.html#velocity)
+         *
+         * Has no effect, if the component is not active.
+         *
+         * @param v New angular velocity
+         */
+        set angularVelocity(v2) {
+          _wl_physx_component_set_angularVelocity(this._id, v2[0], v2[1], v2[2]);
+        }
+        /** Angular velocity or `[0, 0, 0]` if the component is not active. */
+        get angularVelocity() {
+          _wl_physx_component_get_angularVelocity(this._id, _tempMem);
+          return new Float32Array(HEAPF32.buffer, _tempMem, 3);
+        }
+        /**
+         * Set mass.
+         *
+         * [PhysX Manual - "Mass Properties"](https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/physxguide/Manual/RigidBodyDynamics.html#mass-properties)
+         *
+         * @param m New mass.
+         */
+        set mass(m2) {
+          _wl_physx_component_set_mass(this._id, m2);
+        }
+        /** Mass */
+        get mass() {
+          return _wl_physx_component_get_mass(this._id);
+        }
+        /**
+         * Set mass space interia tensor.
+         *
+         * [PhysX Manual - "Mass Properties"](https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/physxguide/Manual/RigidBodyDynamics.html#mass-properties)
+         *
+         * Has no effect, if the component is not active.
+         *
+         * @param v New mass space interatia tensor.
+         */
+        set massSpaceInteriaTensor(v2) {
+          _wl_physx_component_set_massSpaceInertiaTensor(this._id, v2[0], v2[1], v2[2]);
+        }
+        /**
+         * Apply a force.
+         *
+         * [PhysX Manual - "Applying Forces and Torques"](https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/physxguide/Manual/RigidBodyDynamics.html#applying-forces-and-torques)
+         *
+         * Has no effect, if the component is not active.
+         *
+         * @param f Force vector.
+         * @param m Force mode, see {@link ForceMode}, default `Force`.
+         * @param localForce Whether the force vector is in local space, default `false`.
+         * @param p Position to apply force at, default is center of mass.
+         * @param local Whether position is in local space, default `false`.
+         */
+        addForce(f, m2, localForce, p, local) {
+          m2 = m2 || ForceMode.Force;
+          if (!p) {
+            _wl_physx_component_addForce(this._id, f[0], f[1], f[2], m2, !!localForce);
+          } else {
+            _wl_physx_component_addForceAt(this._id, f[0], f[1], f[2], m2, !!localForce, p[0], p[1], p[2], !!local);
+          }
+        }
+        /**
+         * Apply torque.
+         *
+         * [PhysX Manual - "Applying Forces and Torques"](https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/physxguide/Manual/RigidBodyDynamics.html#applying-forces-and-torques)
+         *
+         * Has no effect, if the component is not active.
+         *
+         * @param f Force vector.
+         * @param m Force mode, see {@link ForceMode}, default `Force`.
+         */
+        addTorque(f, m2 = ForceMode.Force) {
+          _wl_physx_component_addTorque(this._id, f[0], f[1], f[2], m2);
+        }
+        /**
+         * Add on collision callback.
+         *
+         * @param callback Function to call when this rigid body (un)collides with any other.
+         *
+         * ```js
+         *  let rigidBody = this.object.getComponent('physx');
+         *  rigidBody.onCollision(function(type, other) {
+         *      // Ignore uncollides
+         *      if(type == CollisionEventType.TouchLost) return;
+         *
+         *      // Take damage on collision with enemies
+         *      if(other.object.name.startsWith('enemy-')) {
+         *          this.applyDamage(10);
+         *      }
+         *  }.bind(this));
+         * ```
+         *
+         * @returns Id of the new callback for use with {@link PhysXComponent#removeCollisionCallback}.
+         */
+        onCollision(callback) {
+          return this.onCollisionWith(this, callback);
+        }
+        /**
+         * Add filtered on collision callback.
+         *
+         * @param otherComp Component for which callbacks will
+         *        be triggered. If you pass this component, the method is equivalent to.
+         *        {@link PhysXComponent#onCollision}.
+         * @param callback Function to call when this rigid body
+         *        (un)collides with `otherComp`.
+         * @returns Id of the new callback for use with {@link PhysXComponent#removeCollisionCallback}.
+         */
+        onCollisionWith(otherComp, callback) {
+          physics._callbacks[this._id] = physics._callbacks[this._id] || [];
+          physics._callbacks[this._id].push(callback);
+          return _wl_physx_component_addCallback(this._id, otherComp._id || this._id);
+        }
+        /**
+         * Remove a collision callback added with {@link PhysXComponent#onCollision} or {@link PhysXComponent#onCollisionWith}.
+         *
+         * @param callbackId Callback id as returned by {@link PhysXComponent#onCollision} or {@link PhysXComponent#onCollisionWith}.
+         * @throws When the callback does not belong to the component.
+         * @throws When the callback does not exist.
+         */
+        removeCollisionCallback(callbackId) {
+          const r = _wl_physx_component_removeCallback(this._id, callbackId);
+          if (r)
+            physics._callbacks[this._id].splice(-r);
+        }
+      };
+      for (const prop of [
+        "static",
+        "extents",
+        "staticFriction",
+        "dynamicFriction",
+        "bounciness",
+        "linearDamping",
+        "angularDamping",
+        "shape",
+        "shapeData",
+        "kinematic",
+        "linearVelocity",
+        "angularVelocity",
+        "mass"
+      ]) {
+        Object.defineProperty(PhysXComponent.prototype, prop, { enumerable: true });
+      }
+      (function(MeshIndexType2) {
+        MeshIndexType2[MeshIndexType2["UnsignedByte"] = 1] = "UnsignedByte";
+        MeshIndexType2[MeshIndexType2["UnsignedShort"] = 2] = "UnsignedShort";
+        MeshIndexType2[MeshIndexType2["UnsignedInt"] = 4] = "UnsignedInt";
+      })(MeshIndexType || (MeshIndexType = {}));
+      Mesh = class {
+        /**
+         * Size of a vertex in float elements.
+         * @deprecated Replaced with {@link Mesh#attribute} and {@link MeshAttributeAccessor}
+         */
+        static get VERTEX_FLOAT_SIZE() {
+          return 3 + 3 + 2;
+        }
+        /**
+         * Size of a vertex in bytes.
+         * @deprecated Replaced with {@link Mesh#attribute} and {@link MeshAttributeAccessor}
+         */
+        static get VERTEX_SIZE() {
+          return this.VERTEX_FLOAT_SIZE * 4;
+        }
+        /**
+         * Position attribute offsets in float elements.
+         * @deprecated Replaced with {@link Mesh#attribute} and {@link MeshAttribute#Position}
+         */
+        static get POS() {
+          return { X: 0, Y: 1, Z: 2 };
+        }
+        /**
+         * Texture coordinate attribute offsets in float elements.
+         * @deprecated Replaced with {@link Mesh#attribute} and {@link MeshAttribute#TextureCoordinate}
+         */
+        static get TEXCOORD() {
+          return { U: 3, V: 4 };
+        }
+        /**
+         * Normal attribute offsets in float elements.
+         * @deprecated Replaced with {@link Mesh#attribute} and {@link MeshAttribute#Normal}
+         */
+        static get NORMAL() {
+          return { X: 5, Y: 6, Z: 7 };
+        }
+        /**
+         * Create a new instance.
+         *
+         * @param params Either a mesh index to wrap or set of parameters to create a new mesh.
+         *    For more information, please have a look at the {@link MeshParameters} interface.
+         */
+        constructor(params) {
+          if (typeof params === "object") {
+            if (!params.vertexCount && params.vertexData) {
+              params.vertexCount = params.vertexData.length / Mesh.VERTEX_FLOAT_SIZE;
+            }
+            if (!params.vertexCount)
+              throw new Error("Missing parameter 'vertexCount'");
+            let indexData = 0;
+            let indexType = 0;
+            let indexDataSize = 0;
+            if (params.indexData) {
+              indexType = params.indexType || MeshIndexType.UnsignedShort;
+              indexDataSize = params.indexData.length * indexType;
+              indexData = _malloc(indexDataSize);
+              switch (indexType) {
+                case MeshIndexType.UnsignedByte:
+                  HEAPU8.set(params.indexData, indexData);
+                  break;
+                case MeshIndexType.UnsignedShort:
+                  HEAPU16.set(params.indexData, indexData >> 1);
+                  break;
+                case MeshIndexType.UnsignedInt:
+                  HEAPU32.set(params.indexData, indexData >> 2);
+                  break;
+              }
+            }
+            const { skinned = false } = params;
+            this._index = _wl_mesh_create(indexData, indexDataSize, indexType, params.vertexCount, skinned);
+            if (params.vertexData) {
+              const positions = this.attribute(MeshAttribute.Position);
+              const normals = this.attribute(MeshAttribute.Normal);
+              const textureCoordinates = this.attribute(MeshAttribute.TextureCoordinate);
+              for (let i = 0; i < params.vertexCount; ++i) {
+                const start = i * Mesh.VERTEX_FLOAT_SIZE;
+                positions.set(i, params.vertexData.subarray(start, start + 3));
+                textureCoordinates === null || textureCoordinates === void 0 ? void 0 : textureCoordinates.set(i, params.vertexData.subarray(start + 3, start + 5));
+                normals === null || normals === void 0 ? void 0 : normals.set(i, params.vertexData.subarray(start + 5, start + 8));
+              }
+            }
+          } else {
+            this._index = params;
+          }
+        }
+        /**
+         * Vertex data (read-only).
+         *
+         * @deprecated Replaced with {@link attribute}
+         */
+        get vertexData() {
+          const ptr = _wl_mesh_get_vertexData(this._index, _tempMem);
+          return new Float32Array(HEAPF32.buffer, ptr, Mesh.VERTEX_FLOAT_SIZE * HEAPU32[_tempMem / 4]);
+        }
+        /** Number of vertices in this mesh. */
+        get vertexCount() {
+          return _wl_mesh_get_vertexCount(this._index);
+        }
+        /** Index data (read-only) or {@link null} if the mesh is not indexed. */
+        get indexData() {
+          const ptr = _wl_mesh_get_indexData(this._index, _tempMem, _tempMem + 4);
+          if (ptr === null)
+            return null;
+          const indexCount = HEAPU32[_tempMem / 4];
+          const indexSize = HEAPU32[_tempMem / 4 + 1];
+          switch (indexSize) {
+            case MeshIndexType.UnsignedByte:
+              return new Uint8Array(HEAPU8.buffer, ptr, indexCount);
+            case MeshIndexType.UnsignedShort:
+              return new Uint16Array(HEAPU16.buffer, ptr, indexCount);
+            case MeshIndexType.UnsignedInt:
+              return new Uint32Array(HEAPU32.buffer, ptr, indexCount);
+          }
+          return null;
+        }
+        /** Updates the bounding sphere to match new vertex positions. */
+        update() {
+          _wl_mesh_update(this._index);
+        }
+        /**
+         * Mesh bounding sphere.
+         *
+         * @param out Preallocated array to write into, to avoid garbage,
+         *     otherwise will allocate a new {@link Float32Array}.
+         *
+         * ```js
+         *  const sphere = new Float32Array(4);
+         *  for(...) {
+         *      mesh.getBoundingSphere(sphere);
+         *      ...
+         *  }
+         * ```
+         *
+         * If the position data is changed, call {@link Mesh#update} to update the
+         * bounding sphere.
+         *
+         * @returns Bounding sphere, 0-2 sphere origin, 3 radius.
+         */
+        getBoundingSphere(out = new Float32Array(4)) {
+          _wl_mesh_get_boundingSphere(this._index, _tempMem);
+          out[0] = _tempMemFloat[0];
+          out[1] = _tempMemFloat[1];
+          out[2] = _tempMemFloat[2];
+          out[3] = _tempMemFloat[3];
+          return out;
+        }
+        /**
+         * Get an attribute accessor to retrieve or modify data of give attribute.
+         *
+         * @param attr Attribute to get access to
+         * @returns {?MeshAttributeAccessor} attr Attribute to get access to or `null`,
+         *      if mesh does not have this attribute.
+         *
+         * If there are no shaders in the scene that use `TextureCoordinate` for example,
+         * no meshes will have the `TextureCoordinate` attribute.
+         *
+         * For flexible reusable components, take this into account that only `Position`
+         * is guaranteed to be present at all time.
+         */
+        attribute(attr) {
+          if (typeof attr != "number")
+            throw new TypeError("Expected number, but got " + typeof attr);
+          _wl_mesh_get_attribute(this._index, attr, _tempMem);
+          if (_tempMemUint32[0] == 255)
+            return null;
+          const a = new MeshAttributeAccessor(attr);
+          a._attribute = _tempMemUint32[0];
+          a._offset = _tempMemUint32[1];
+          a._stride = _tempMemUint32[2];
+          a._formatSize = _tempMemUint32[3];
+          a._componentCount = _tempMemUint32[4];
+          a.length = this.vertexCount;
+          return a;
+        }
+        /**
+         * Destroy and free the meshes memory.
+         *
+         * It is best practice to set the mesh variable to `null` after calling
+         * destroy to prevent accidental use:
+         *
+         * ```js
+         *   mesh.destroy();
+         *   mesh = null;
+         * ```
+         *
+         * Accessing the mesh after destruction behaves like accessing an empty
+         * mesh.
+         *
+         * @since 0.9.0
+         */
+        destroy() {
+          _wl_mesh_destroy(this._index);
+        }
+      };
+      MeshAttributeAccessor = class {
+        /**
+         * Create a new instance.
+         *
+         * @param type The type of data this accessor is wrapping.
+         * @note Do not use this constructor. Instead, please use the {@link Mesh.attribute} method.
+         *
+         * @hidden
+         */
+        constructor(type = MeshAttribute.Position) {
+          this._attribute = -1;
+          this._offset = 0;
+          this._stride = 0;
+          this._formatSize = 0;
+          this._componentCount = 0;
+          this.length = 0;
+          switch (type) {
+            case MeshAttribute.Position:
+            case MeshAttribute.Normal:
+            case MeshAttribute.TextureCoordinate:
+            case MeshAttribute.Tangent:
+            case MeshAttribute.Color:
+            case MeshAttribute.JointWeight:
+            case MeshAttribute.SecondaryJointWeight:
+              this._bufferType = Float32Array;
+              this._tempBufferGetter = getTempBufferF32;
+              break;
+            case MeshAttribute.JointId:
+            case MeshAttribute.SecondaryJointId:
+              this._bufferType = Uint16Array;
+              this._tempBufferGetter = getTempBufferU16;
+              break;
+            default:
+              throw new Error(`Invalid attribute accessor type: ${type}`);
+          }
+        }
+        /**
+         * Create a new TypedArray to hold this attribute values.
+         *
+         * This method is useful to create a view to hold the data to
+         * pass to {@link MeshAttributeAccessor.get} and {@link MeshAttributeAccessor.set}
+         *
+         * Example:
+         *
+         * ```js
+         * const vertexCount = 4;
+         * const positionAttribute = mesh.attribute(MeshAttributes.Position);
+         *
+         * // A position has 3 floats per vertex. Thus, positions has length 3 * 4.
+         * const positions = positionAttribute.createArray(vertexCount);
+         * ```
+         *
+         * @param count The number of **vertices** expected.
+         * @returns A TypedArray with the appropriate format to access the data
+         */
+        createArray(count = 1) {
+          count = count > this.length ? this.length : count;
+          return new this._bufferType(count * this._componentCount);
+        }
+        /**
+         * Get attribute element.
+         *
+         * @param {number} index Index
+         * @param out Preallocated array to write into,
+         *      to avoid garbage, otherwise will allocate a new TypedArray.
+         *
+         * `out.length` needs to be a multiple of the attributes component count, see
+         * {@link MeshAttribute}. If `out.length` is more than one multiple, it will be
+         * filled with the next n attribute elements, which can reduce overhead
+         * of this call.
+         *
+         * @returns The `out` parameter
+         */
+        get(index, out = this.createArray()) {
+          if (out.length % this._componentCount !== 0)
+            throw new Error(`out.length, ${out.length} is not a multiple of the attribute vector components, ${this._componentCount}`);
+          const dest = this._tempBufferGetter(out.length);
+          const bytesPerElt = this._bufferType.BYTES_PER_ELEMENT;
+          const bytes = bytesPerElt * out.length;
+          const destFormatSize = this._componentCount * bytesPerElt;
+          _wl_mesh_get_attribute_values(this._attribute, this._formatSize, this._offset + index * this._stride, this._stride, destFormatSize, dest.byteOffset, bytes);
+          for (let i = 0; i < out.length; ++i)
+            out[i] = dest[i];
+          return out;
+        }
+        /**
+         * Set attribute element.
+         *
+         * @param i Index
+         * @param v Value to set the element to
+         *
+         * `v.length` needs to be a multiple of the attributes component count, see
+         * {@link MeshAttribute}. If `v.length` is more than one multiple, it will be
+         * filled with the next n attribute elements, which can reduce overhead
+         * of this call.
+         *
+         * @returns Reference to self (for method chaining)
+         */
+        set(i, v2) {
+          if (v2.length % this._componentCount !== 0)
+            throw new Error(`out.length, ${v2.length} is not a multiple of the attribute vector components, ${this._componentCount}`);
+          const bytesPerElt = this._bufferType.BYTES_PER_ELEMENT;
+          const bytes = bytesPerElt * v2.length;
+          const srcFormatSize = this._componentCount * bytesPerElt;
+          if (v2.buffer != HEAPU8.buffer) {
+            const dest = this._tempBufferGetter(v2.length);
+            dest.set(v2);
+            v2 = dest;
+          }
+          _wl_mesh_set_attribute_values(this._attribute, srcFormatSize, v2.byteOffset, bytes, this._formatSize, this._offset + i * this._stride, this._stride);
+          return this;
+        }
+      };
+      Material = class {
+        /**
+         * Create a new Material.
+         *
+         * @note Creating material is expensive. Please use {@link Material#clone} to clone a material.
+         * @note Do not use this constructor directly with an index, this is reserved for internal purposes.
+         */
+        constructor(params) {
+          if (typeof params !== "number") {
+            if (!(params === null || params === void 0 ? void 0 : params.pipeline))
+              throw new Error("Missing parameter 'pipeline'");
+            const pipeline = params.pipeline;
+            const lengthBytes = lengthBytesUTF8(pipeline) + 1;
+            stringToUTF8(pipeline, _tempMem, lengthBytes);
+            this._index = _wl_material_create(_tempMem);
+            if (this._index < 0)
+              throw new Error(`No such pipeline '${pipeline}'`);
+          } else {
+            this._index = params;
+          }
+          this._definition = _wl_material_get_definition(this._index);
+          if (!_WL._materialDefinitions[this._definition])
+            throw new Error(`Material Definition ${this._definition} not found for material with index ${this._index}`);
+          return new Proxy(this, {
+            get(target, prop) {
+              const definition = _WL._materialDefinitions[target._definition];
+              const param = definition.get(prop);
+              if (!param)
+                return target[prop];
+              if (_wl_material_get_param_value(target._index, param.index, _tempMem)) {
+                const type = param.type;
+                switch (type.type) {
+                  case MaterialParamType.UnsignedInt:
+                    return type.componentCount == 1 ? _tempMemUint32[0] : new Uint32Array(HEAPU32.buffer, _tempMem, type.componentCount);
+                  case MaterialParamType.Int:
+                    return type.componentCount == 1 ? _tempMemInt[0] : new Int32Array(HEAP32.buffer, _tempMem, type.componentCount);
+                  case MaterialParamType.Float:
+                    return type.componentCount == 1 ? _tempMemFloat[0] : new Float32Array(HEAPF32.buffer, _tempMem, type.componentCount);
+                  case MaterialParamType.Sampler:
+                    return new Texture(_tempMemInt[0]);
+                  default:
+                    throw new Error(`Invalid type ${type} on parameter ${param.index} for material ${target._index}`);
+                }
+              }
+            },
+            set(target, prop, value) {
+              const definition = _WL._materialDefinitions[target._definition];
+              const param = definition.get(prop);
+              if (!param) {
+                target[prop] = value;
+                return true;
+              }
+              const type = param.type;
+              switch (type.type) {
+                case MaterialParamType.UnsignedInt:
+                case MaterialParamType.Int:
+                case MaterialParamType.Sampler:
+                  const v2 = value instanceof Texture ? value.id : value;
+                  _wl_material_set_param_value_uint(target._index, param.index, v2);
+                  break;
+                case MaterialParamType.Float:
+                  let count = 1;
+                  if (typeof value === "number") {
+                    _tempMemFloat[0] = value;
+                  } else {
+                    count = value.length;
+                    for (let i = 0; i < count; ++i)
+                      _tempMemFloat[i] = value[i];
+                  }
+                  _wl_material_set_param_value_float(target._index, param.index, _tempMem, count);
+                  break;
+                case MaterialParamType.Font:
+                  throw new Error("Setting font properties is currently unsupported.");
+              }
+              return true;
+            }
+          });
+        }
+        /** Name of the shader used by this material. */
+        get shader() {
+          return UTF8ToString(_wl_material_get_shader(this._index));
+        }
+        /**
+         * Create a copy of the underlying native material.
+         *
+         * @returns Material clone.
+         */
+        clone() {
+          const id = _wl_material_clone(this._index);
+          return id > 0 ? new Material(id) : null;
+        }
+        /**
+         * Wrap a native material index.
+         *
+         * @param index The index.
+         * @returns Material instance or {@link null} if index <= 0.
+         *
+         * @deprecated Please use `new Material()` instead.
+         */
+        static wrap(index) {
+          return index > 0 ? new Material(index) : null;
+        }
+      };
+      tempCanvas = null;
+      Texture = class {
+        /**
+         * @param param HTML media element to create texture from or texture id to wrap.
+         */
+        constructor(param) {
+          this._id = 0;
+          this._imageIndex = void 0;
+          if (param instanceof HTMLImageElement || param instanceof HTMLVideoElement || param instanceof HTMLCanvasElement) {
+            const index = _images.length;
+            _images.push(param);
+            this._imageIndex = index;
+            this._id = _wl_renderer_addImage(index);
+          } else {
+            this._id = param;
+          }
+          textures[this._id] = this;
+        }
+        /** Whether this texture is valid. */
+        get valid() {
+          return this._id >= 0;
+        }
+        /** Index in this manager. */
+        get id() {
+          return this._id;
+        }
+        /** Update the texture to match the HTML element (e.g. reflect the current frame of a video). */
+        update() {
+          if (!this.valid)
+            return;
+          _wl_renderer_updateImage(this._id, this._imageIndex);
+        }
+        /** Width of the texture. */
+        get width() {
+          return _wl_texture_width(this._id);
+        }
+        /** Height of the texture. */
+        get height() {
+          return _wl_texture_height(this._id);
+        }
+        /**
+         * Update a subrange on the texture to match the HTML element (e.g. reflect the current frame of a video).
+         *
+         * Usage:
+         *
+         * ```js
+         * // Copies rectangle of pixel starting from (10, 20)
+         * texture.updateSubImage(10, 20, 600, 400);
+         * ```
+         *
+         * @param x x offset
+         * @param y y offset
+         * @param w width
+         * @param h height
+         */
+        updateSubImage(x2, y2, w2, h) {
+          var _a;
+          if (!this.valid)
+            return;
+          if (!tempCanvas)
+            tempCanvas = document.createElement("canvas");
+          const img = _images[this._imageIndex];
+          if (!img)
+            return;
+          tempCanvas.width = w2;
+          tempCanvas.height = h;
+          (_a = tempCanvas.getContext("2d")) === null || _a === void 0 ? void 0 : _a.drawImage(img, x2, y2, w2, h, 0, 0, w2, h);
+          _images[this._imageIndex] = tempCanvas;
+          try {
+            _wl_renderer_updateImage(this._id, this._imageIndex, x2, (img.videoHeight || img.height) - y2 - h);
+          } finally {
+            _images[this._imageIndex] = img;
+          }
+        }
+        /**
+         * Destroy and free the texture's texture altas space and memory.
+         *
+         * It is best practice to set the texture variable to `null` after calling
+         * destroy to prevent accidental use of the invalid texture:
+         *
+         * ```js
+         *   texture.destroy();
+         *   texture = null;
+         * ```
+         *
+         * @since 0.9.0
+         */
+        destroy() {
+          _wl_texture_destroy(this._id);
+          if (this._imageIndex) {
+            _images[this._imageIndex] = null;
+            this._imageIndex = void 0;
+          }
+        }
+      };
+      textures = {
+        /**
+         * Load an image from URL as {@link Texture}
+         * @param {string} filename URL to load from
+         * @param {string} crossOrigin Cross origin flag for the {@link Image} object
+         * @returns {Promise<Texture>} Loaded texture
+         */
+        load: function(filename, crossOrigin) {
+          let image = new Image();
+          if (crossOrigin !== void 0) {
+            image.crossOrigin = crossOrigin;
+          }
+          image.src = filename;
+          return new Promise((resolve, reject) => {
+            image.onload = function() {
+              let texture = new Texture(image);
+              if (!texture.valid) {
+                reject("Failed to add image " + image.src + " to texture atlas. Probably incompatible format.");
+              }
+              resolve(texture);
+            };
+          });
+        }
+      };
+      Animation = class {
+        /**
+         * @param index Index in the manager
+         */
+        constructor(index) {
+          this._index = index;
+        }
+        /** Duration of this animation. */
+        get duration() {
+          return _wl_animation_get_duration(this._index);
+        }
+        /** Number of tracks in this animation. */
+        get trackCount() {
+          return _wl_animation_get_trackCount(this._index);
+        }
+        /**
+         * Clone this animation retargeted to a new set of objects.
+         *
+         * The clone shares most of the data with the original and is therefore
+         * light-weight.
+         *
+         * **Experimental:** This API might change in upcoming versions.
+         *
+         * If retargetting to {@link Skin}, the join names will be used to determine a mapping
+         * from the previous skin to the new skin. The source skin will be retrieved from
+         * the first track in the animation that targets a joint.
+         *
+         * @param newTargets New targets per track. Expected to have
+         *      {@link Animation#trackCount} elements or to be a {@link Skin}.
+         * @returns The retargeted clone of this animation.
+         */
+        retarget(newTargets) {
+          if (newTargets instanceof Skin) {
+            const animId2 = _wl_animation_retargetToSkin(this._index, newTargets._index);
+            return new Animation(animId2);
+          }
+          if (newTargets.length != this.trackCount) {
+            throw Error("Expected " + this.trackCount.toString() + " targets, but got " + newTargets.length.toString());
+          }
+          const ptr = _malloc(2 * newTargets.length);
+          for (let i = 0; i < newTargets.length; ++i) {
+            HEAPU16[ptr >> 1 + i] = newTargets[i].objectId;
+          }
+          const animId = _wl_animation_retarget(this._index, ptr);
+          _free(ptr);
+          return new Animation(animId);
+        }
+      };
+      $Object = class {
+        /**
+         * @param o Object id to wrap
+         */
+        constructor(o) {
+          this.objectId = o;
+        }
+        /**
+         * Name of the object.
+         *
+         * Useful for identifying objects during debugging.
+         */
+        get name() {
+          return UTF8ToString(_wl_object_name(this.objectId));
+        }
+        /**
+         * Set the object's name.
+         *
+         * @param newName The new name to set.
+         */
+        set name(newName) {
+          const lengthBytes = lengthBytesUTF8(newName) + 1;
+          const mem = _malloc(lengthBytes);
+          stringToUTF8(newName, mem, lengthBytes);
+          _wl_object_set_name(this.objectId, mem);
+          _free(mem);
+        }
+        /**
+         * Parent of this object or {@link null} if parented to root.
+         */
+        get parent() {
+          const p = _wl_object_parent(this.objectId);
+          return p == 0 ? null : _wrapObject(p);
+        }
+        /**
+         * Children of this object.
+         */
+        get children() {
+          const childrenCount = _wl_object_get_children_count(this.objectId);
+          if (childrenCount === 0)
+            return [];
+          requireTempMem(childrenCount * 2);
+          _wl_object_get_children(this.objectId, _tempMem, _tempMemSize >> 1);
+          const children = new Array(childrenCount);
+          for (let i = 0; i < childrenCount; ++i) {
+            children[i] = _wrapObject(_tempMemUint16[i]);
+          }
+          return children;
+        }
+        /**
+         * Reparent object to given object.
+         *
+         * @note Reparenting is not trivial and might have a noticeable performance impact.
+         *
+         * @param newParent New parent or {@link null} to parent to root
+         */
+        set parent(newParent) {
+          _wl_object_set_parent(this.objectId, newParent == null ? 0 : newParent.objectId);
+        }
+        /** Reset local transformation (translation, rotation and scaling) to identity. */
+        resetTransform() {
+          _wl_object_reset_translation_rotation(this.objectId);
+          _wl_object_reset_scaling(this.objectId);
+        }
+        /** Reset local translation and rotation to identity */
+        resetTranslationRotation() {
+          _wl_object_reset_translation_rotation(this.objectId);
+        }
+        /**
+         * Reset local rotation, keep translation.
+         * @note To reset both rotation and translation, prefer
+         *       {@link resetTranslationRotation}.
+         */
+        resetRotation() {
+          _wl_object_reset_rotation(this.objectId);
+        }
+        /**
+         * Reset local translation, keep rotation.
+         * @note To reset both rotation and translation, prefer
+         *       {@link resetTranslationRotation}.
+         */
+        resetTranslation() {
+          _wl_object_reset_translation(this.objectId);
+        }
+        /** Reset local scaling to identity (``[1.0, 1.0, 1.0]``). */
+        resetScaling() {
+          _wl_object_reset_scaling(this.objectId);
+        }
+        /**
+         * Translate object by a vector in the parent's space.
+         * @param v Vector to translate by.
+         */
+        translate(v2) {
+          _wl_object_translate(this.objectId, v2[0], v2[1], v2[2]);
+        }
+        /**
+         * Translate object by a vector in object space.
+         * @param v Vector to translate by.
+         */
+        translateObject(v2) {
+          _wl_object_translate_obj(this.objectId, v2[0], v2[1], v2[2]);
+        }
+        /**
+         * Translate object by a vector in world space.
+         * @param v Vector to translate by.
+         */
+        translateWorld(v2) {
+          _wl_object_translate_world(this.objectId, v2[0], v2[1], v2[2]);
+        }
+        /**
+         * Rotate around given axis by given angle (degrees) in local space.
+         *
+         * @param a Vector representing the rotation axis.
+         * @param d Angle in degrees.
+         *
+         * @note If the object is translated the rotation will be around
+         *     the parent. To rotate around the object origin, use
+         *     {@link rotateAxisAngleDegObject}
+         *
+         * @see {@link rotateAxisAngleRad}
+         */
+        rotateAxisAngleDeg(a, d2) {
+          _wl_object_rotate_axis_angle(this.objectId, a[0], a[1], a[2], d2);
+        }
+        /**
+         * Rotate around given axis by given angle (radians) in local space.
+         *
+         * @param {number[]} a Vector representing the rotation axis.
+         * @param {number} d Angle in radians.
+         *
+         * @note If the object is translated the rotation will be around
+         *     the parent. To rotate around the object origin, use
+         *     {@link rotateAxisAngleDegObject}
+         *
+         * @see {@link rotateAxisAngleDeg}
+         */
+        rotateAxisAngleRad(a, d2) {
+          _wl_object_rotate_axis_angle_rad(this.objectId, a[0], a[1], a[2], d2);
+        }
+        /**
+         * Rotate around given axis by given angle (degrees) in object space.
+         *
+         * @param a Vector representing the rotation axis.
+         * @param d Angle in degrees.
+         *
+         * Equivalent to prepending a rotation quaternion to the object's
+         * local transformation.
+         *
+         * @see {@link rotateAxisAngleRadObject}
+         */
+        rotateAxisAngleDegObject(a, d2) {
+          _wl_object_rotate_axis_angle_obj(this.objectId, a[0], a[1], a[2], d2);
+        }
+        /**
+         * Rotate around given axis by given angle (radians) in object space
+         * Equivalent to prepending a rotation quaternion to the object's
+         * local transformation.
+         *
+         * @param a Vector representing the rotation axis
+         * @param d Angle in degrees
+         *
+         * @see {@link rotateAxisAngleDegObject}
+         */
+        rotateAxisAngleRadObject(a, d2) {
+          _wl_object_rotate_axis_angle_rad_obj(this.objectId, a[0], a[1], a[2], d2);
+        }
+        /**
+         * Rotate by a quaternion.
+         *
+         * @param q the Quaternion to rotate by.
+         */
+        rotate(q2) {
+          _wl_object_rotate_quat(this.objectId, q2[0], q2[1], q2[2], q2[3]);
+        }
+        /**
+         * Rotate by a quaternion in object space.
+         *
+         * Equivalent to prepending a rotation quaternion to the object's
+         * local transformation.
+         *
+         * @param q the Quaternion to rotate by.
+         */
+        rotateObject(q2) {
+          _wl_object_rotate_quat_obj(this.objectId, q2[0], q2[1], q2[2], q2[3]);
+        }
+        /**
+         * Scale object by a vector in object space.
+         *
+         * @param v Vector to scale by.
+         */
+        scale(v2) {
+          _wl_object_scale(this.objectId, v2[0], v2[1], v2[2]);
+        }
+        /** Local / object space transformation. */
+        get transformLocal() {
+          return new Float32Array(HEAPF32.buffer, _wl_object_trans_local(this.objectId), 8);
+        }
+        /**
+         * Set local transform.
+         *
+         * @param t Local space transformation.
+         *
+         * @since 0.8.5
+         */
+        set transformLocal(t) {
+          this.transformLocal.set(t);
+          this.setDirty();
+        }
+        /**
+         * Compute local / object space translation from transformation.
+         *
+         * @param out Destination array/vector, expected to have at least 3 elements.
+         * @return The `out` parameter.
+         */
+        getTranslationLocal(out) {
+          _wl_object_get_translation_local(this.objectId, _tempMem);
+          out[0] = _tempMemFloat[0];
+          out[1] = _tempMemFloat[1];
+          out[2] = _tempMemFloat[2];
+          return out;
+        }
+        /**
+         * Compute world space translation from transformation.
+         *
+         * May recompute transformations of the hierarchy of this object,
+         * if they were changed by JavaScript components this frame.
+         *
+         * @param out Destination array/vector, expected to have at least 3 elements.
+         * @return The `out` parameter.
+         */
+        getTranslationWorld(out) {
+          _wl_object_get_translation_world(this.objectId, _tempMem);
+          out[0] = _tempMemFloat[0];
+          out[1] = _tempMemFloat[1];
+          out[2] = _tempMemFloat[2];
+          return out;
+        }
+        /**
+         * Set local / object space translation.
+         *
+         * Concatenates a new translation dual quaternion onto the existing rotation.
+         *
+         * @param v New local translation array/vector, expected to have at least 3 elements.
+         */
+        setTranslationLocal(v2) {
+          _wl_object_set_translation_local(this.objectId, v2[0], v2[1], v2[2]);
+        }
+        /**
+         * Set world space translation.
+         *
+         * Applies the inverse parent transform with a new translation dual quaternion
+         * which is concatenated onto the existing rotation.
+         *
+         * @param v New world translation array/vector, expected to have at least 3 elements.
+         */
+        setTranslationWorld(v2) {
+          _wl_object_set_translation_world(this.objectId, v2[0], v2[1], v2[2]);
+        }
+        /**
+         * Global / world space transformation.
+         *
+         * May recompute transformations of the hierarchy of this object,
+         * if they were changed by JavaScript components this frame.
+         */
+        get transformWorld() {
+          return new Float32Array(HEAPF32.buffer, _wl_object_trans_world(this.objectId), 8);
+        }
+        /**
+         * Set world transform.
+         *
+         * @param t Global / world space transformation.
+         *
+         * @since 0.8.5
+         */
+        set transformWorld(t) {
+          this.transformWorld.set(t);
+          _wl_object_trans_world_to_local(this.objectId);
+        }
+        /** Local / object space scaling. */
+        get scalingLocal() {
+          return new Float32Array(HEAPF32.buffer, _wl_object_scaling_local(this.objectId), 3);
+        }
+        /**
+         * Set scaling local.
+         *
+         * @param s Global / world space transformation.
+         *
+         * @since 0.8.7
+         */
+        set scalingLocal(s) {
+          this.scalingLocal.set(s);
+          this.setDirty();
+        }
+        /**
+         * Global / world space scaling.
+         *
+         * May recompute transformations of the hierarchy of this object,
+         * if they were changed by JavaScript components this frame.
+         */
+        get scalingWorld() {
+          return new Float32Array(HEAPF32.buffer, _wl_object_scaling_world(this.objectId), 3);
+        }
+        /**
+         * Set scaling world.
+         *
+         * @param t Global / world space transformation.
+         *
+         * @since 0.8.7
+         */
+        set scalingWorld(s) {
+          this.scalingWorld.set(s);
+          _wl_object_scaling_world_to_local(this.objectId);
+        }
+        /**
+         * Local space rotation.
+         *
+         * @since 0.8.7
+         */
+        get rotationLocal() {
+          return this.transformLocal.subarray(0, 4);
+        }
+        /**
+         * Global / world space rotation
+         *
+         * @since 0.8.7
+         */
+        get rotationWorld() {
+          return this.transformWorld.subarray(0, 4);
+        }
+        /**
+         * Set rotation local
+         *
+         * @param r Local space rotation
+         *
+         * @since 0.8.7
+         */
+        set rotationLocal(r) {
+          _wl_object_set_rotation_local(this.objectId, r[0], r[1], r[2], r[3]);
+        }
+        /**
+         * Set rotation world.
+         *
+         * @param {number} r Global / world space rotation.
+         *
+         * @since 0.8.7
+         */
+        set rotationWorld(r) {
+          _wl_object_set_rotation_world(this.objectId, r[0], r[1], r[2], r[3]);
+        }
+        /**
+         * Compute the object's forward facing world space vector.
+         *
+         * @param out Destination array/vector, expected to have at least 3 elements.
+         * @return The `out` parameter.
+         */
+        getForward(out) {
+          out[0] = 0;
+          out[1] = 0;
+          out[2] = -1;
+          this.transformVectorWorld(out);
+          return out;
+        }
+        /**
+         * Compute the object's up facing world space vector.
+         *
+         * @param out Destination array/vector, expected to have at least 3 elements.
+         * @return The `out` parameter.
+         */
+        getUp(out) {
+          out[0] = 0;
+          out[1] = 1;
+          out[2] = 0;
+          this.transformVectorWorld(out);
+          return out;
+        }
+        /**
+         * Compute the object's right facing world space vector/
+         *
+         * @param out Destination array/vector, expected to have at least 3 elements.
+         * @return The `out` parameter.
+         */
+        getRight(out) {
+          out[0] = 1;
+          out[1] = 0;
+          out[2] = 0;
+          this.transformVectorWorld(out);
+          return out;
+        }
+        /**
+         * Transform a vector by this object's world transform.
+         *
+         * @param out Out point
+         * @param v Point to transform, default `out`
+         * @return The `out` parameter.
+         *
+         * @since 0.8.7
+         */
+        transformVectorWorld(out, v2) {
+          v2 = v2 || out;
+          _tempMemFloat[0] = v2[0];
+          _tempMemFloat[1] = v2[1];
+          _tempMemFloat[2] = v2[2];
+          _wl_object_transformVectorWorld(this.objectId, _tempMem);
+          out[0] = _tempMemFloat[0];
+          out[1] = _tempMemFloat[1];
+          out[2] = _tempMemFloat[2];
+          return out;
+        }
+        /**
+         * Transform a vector by this object's local transform
+         *
+         * @param out Out point
+         * @param v Point to transform, default `out`
+         * @return The `out` parameter.
+         *
+         * @since 0.8.7
+         */
+        transformVectorLocal(out, v2) {
+          v2 = v2 || out;
+          _tempMemFloat[0] = v2[0];
+          _tempMemFloat[1] = v2[1];
+          _tempMemFloat[2] = v2[2];
+          _wl_object_transformVectorLocal(this.objectId, _tempMem);
+          out[0] = _tempMemFloat[0];
+          out[1] = _tempMemFloat[1];
+          out[2] = _tempMemFloat[2];
+          return out;
+        }
+        /**
+         * Transform a point by this object's world transform.
+         *
+         * @param out Out point.
+         * @param p Point to transform, default `out`.
+         * @return The `out` parameter.
+         *
+         * @since 0.8.7
+         */
+        transformPointWorld(out, p) {
+          p = p || out;
+          _tempMemFloat[0] = p[0];
+          _tempMemFloat[1] = p[1];
+          _tempMemFloat[2] = p[2];
+          _wl_object_transformPointWorld(this.objectId, _tempMem);
+          out[0] = _tempMemFloat[0];
+          out[1] = _tempMemFloat[1];
+          out[2] = _tempMemFloat[2];
+          return out;
+        }
+        /**
+         * Transform a point by this object's local transform.
+         *
+         * @param out Out point.
+         * @param p Point to transform, default `out`.
+         * @return The `out` parameter.
+         *
+         * @since 0.8.7
+         */
+        transformPointLocal(out, p) {
+          p = p || out;
+          _tempMemFloat[0] = p[0];
+          _tempMemFloat[1] = p[1];
+          _tempMemFloat[2] = p[2];
+          _wl_object_transformPointLocal(this.objectId, _tempMem);
+          out[0] = _tempMemFloat[0];
+          out[1] = _tempMemFloat[1];
+          out[2] = _tempMemFloat[2];
+          return out;
+        }
+        /**
+         * Transform a vector by this object's inverse world transform.
+         *
+         * @param {number[]} out Out point.
+         * @param {number[]} v Vector to transform, default `out`.
+         * @return The `out` parameter.
+         *
+         * @since 0.8.7
+         */
+        transformVectorInverseWorld(out, v2) {
+          v2 = v2 || out;
+          _tempMemFloat[0] = v2[0];
+          _tempMemFloat[1] = v2[1];
+          _tempMemFloat[2] = v2[2];
+          _wl_object_transformVectorInverseWorld(this.objectId, _tempMem);
+          out[0] = _tempMemFloat[0];
+          out[1] = _tempMemFloat[1];
+          out[2] = _tempMemFloat[2];
+          return out;
+        }
+        /**
+         * Transform a point by this object's inverse local transform.
+         *
+         * @param out Out point
+         * @param v Vector to transform, default `out`
+         * @return The `out` parameter.
+         *
+         * @since 0.8.7
+         */
+        transformVectorInverseLocal(out, v2) {
+          v2 = v2 || out;
+          _tempMemFloat[0] = v2[0];
+          _tempMemFloat[1] = v2[1];
+          _tempMemFloat[2] = v2[2];
+          _wl_object_transformVectorInverseLocal(this.objectId, _tempMem);
+          out[0] = _tempMemFloat[0];
+          out[1] = _tempMemFloat[1];
+          out[2] = _tempMemFloat[2];
+          return out;
+        }
+        /**
+         * Transform a point by this object's inverse world transform.
+         *
+         * @param out Out point.
+         * @param v Point to transform, default `out`.
+         * @return The `out` parameter.
+         *
+         * @since 0.8.7
+         */
+        transformPointInverseWorld(out, p) {
+          p = p || out;
+          _tempMemFloat[0] = p[0];
+          _tempMemFloat[1] = p[1];
+          _tempMemFloat[2] = p[2];
+          _wl_object_transformPointInverseWorld(this.objectId, _tempMem);
+          out[0] = _tempMemFloat[0];
+          out[1] = _tempMemFloat[1];
+          out[2] = _tempMemFloat[2];
+          return out;
+        }
+        /**
+         * Transform a point by this object's inverse local transform.
+         *
+         * @param out Out point.
+         * @param p Point to transform, default `out`.
+         * @return The `out` parameter.
+         *
+         * @since 0.8.7
+         */
+        transformPointInverseLocal(out, p) {
+          p = p || out;
+          _tempMemFloat.set(p);
+          _wl_object_transformPointInverseLocal(this.objectId, _tempMem);
+          out[0] = _tempMemFloat[0];
+          out[1] = _tempMemFloat[1];
+          out[2] = _tempMemFloat[2];
+          return out;
+        }
+        /**
+         * Transform an object space dual quaternion into world space.
+         *
+         * @param out Out transformation.
+         * @param q Local space transformation, default `out`.
+         * @return The `out` parameter.
+         *
+         * @since 0.8.7
+         */
+        toWorldSpaceTransform(out, q2) {
+          q2 = q2 || out;
+          _tempMemFloat.set(q2);
+          _wl_object_toWorldSpaceTransform(this.objectId, _tempMem);
+          out[0] = _tempMemFloat[0];
+          out[1] = _tempMemFloat[1];
+          out[2] = _tempMemFloat[2];
+          out[3] = _tempMemFloat[3];
+          out[4] = _tempMemFloat[4];
+          out[5] = _tempMemFloat[5];
+          out[6] = _tempMemFloat[6];
+          out[7] = _tempMemFloat[7];
+          return out;
+        }
+        /**
+         * Transform a world space dual quaternion into local space
+         *
+         * @param {number[]} out Out transformation
+         * @param {number[]} q World space transformation, default `out`
+         * @return The `out` parameter.
+         *
+         * @since 0.8.7
+         */
+        toLocalSpaceTransform(out, q2) {
+          const p = this.parent;
+          q2 = q2 || out;
+          if (!p) {
+            if (out !== q2) {
+              out[0] = q2[0];
+              out[1] = q2[1];
+              out[2] = q2[2];
+              out[3] = q2[3];
+              out[4] = q2[4];
+              out[5] = q2[5];
+              out[6] = q2[6];
+              out[7] = q2[7];
+            }
+          } else {
+            p.toObjectSpaceTransform(q2);
+          }
+          return out;
+        }
+        /**
+         * Transform a world space dual quaternion into object space
+         *
+         * @param out Out transformation.
+         * @param q World space transformation, default `out`
+         * @return The `out` parameter.
+         *
+         * @since 0.8.7
+         */
+        toObjectSpaceTransform(out, q2) {
+          q2 = q2 || out;
+          _tempMemFloat.set(q2);
+          _wl_object_toObjectSpaceTransform(this.objectId, _tempMem);
+          out[0] = _tempMemFloat[0];
+          out[1] = _tempMemFloat[1];
+          out[2] = _tempMemFloat[2];
+          out[3] = _tempMemFloat[3];
+          out[4] = _tempMemFloat[4];
+          out[5] = _tempMemFloat[5];
+          out[6] = _tempMemFloat[6];
+          out[7] = _tempMemFloat[7];
+          return out;
+        }
+        /**
+         * Turn towards / look at target.
+         *
+         * @param v Target vector to turn towards.
+         * @param up Up vector of this object, default `[0, 1, 0]`.
+         */
+        lookAt(v2, up = UP_VECTOR) {
+          _wl_object_lookAt(this.objectId, v2[0], v2[1], v2[2], up[0], up[1], up[2]);
+        }
+        /** Destroy the object with all of its components and remove it from the scene */
+        destroy() {
+          _wl_scene_remove_object(this.objectId);
+          this.objectId = null;
+        }
+        /**
+         * Mark transformation dirty.
+         *
+         * Causes an eventual recalculation of {@link transformWorld}, either
+         * on next {@link getTranslationWorld}, {@link transformWorld} or
+         * {@link scalingWorld} or the beginning of next frame, whichever
+         * happens first.
+         */
+        setDirty() {
+          _wl_object_set_dirty(this.objectId);
+        }
+        /**
+         * Disable/enable all components of this object.
+         *
+         * @param b New state for the components.
+         *
+         * @since 0.8.5
+         */
+        set active(b2) {
+          const comps = this.getComponents();
+          for (let c of comps) {
+            c.active = b2;
+          }
+        }
+        /**
+         * Get a component attached to this object.
+         *
+         * @param typeOrClass Type name. It's also possible to give a class definition.
+         *     In this case, the method will use the `class.TypeName` field to find the component.
+         * @param index=0 Index for component of given type. This can be used to access specific
+         *      components if the object has multiple components of the same type.
+         * @returns The component or {@link null} if there is no such component on this object
+         */
+        getComponent(typeOrClass, index) {
+          const type = isString(typeOrClass) ? typeOrClass : typeOrClass.TypeName;
+          const lengthBytes = lengthBytesUTF8(type) + 1;
+          const mem = _malloc(lengthBytes);
+          stringToUTF8(type, mem, lengthBytes);
+          const componentType = _wl_get_component_manager_index(mem);
+          _free(mem);
+          if (componentType < 0) {
+            const typeIndex = _WL._componentTypeIndices[type];
+            const jsIndex = _wl_get_js_component_index(this.objectId, typeIndex, index || 0);
+            return jsIndex < 0 ? null : _WL._components[jsIndex];
+          }
+          const componentId = _wl_get_component_id(this.objectId, componentType, index || 0);
+          return _wrapComponent(type, componentType, componentId);
+        }
+        /**
+         * @param typeOrClass Type name, pass a falsey value (`undefined` or {@link null}) to retrieve all.
+         *     It's also possible to give a class definition. In this case, the method will use the `class.TypeName` field to
+         *     find the components.
+         * @returns All components of given type attached to this object.
+         *
+         * @note As this function is non-trivial, avoid using it in `update()` repeatedly,
+         *      but rather store its result in `init()` or `start()`
+         * @warning This method will currently return at most 341 components.
+         */
+        getComponents(typeOrClass) {
+          let componentType = null;
+          let type = null;
+          if (typeOrClass) {
+            type = isString(typeOrClass) ? typeOrClass : typeOrClass.TypeName;
+            componentType = $Object._typeIndexFor(type);
+          }
+          const components = [];
+          const maxComps = Math.floor(_tempMemSize / 3 * 2);
+          const componentsCount = _wl_object_get_components(this.objectId, _tempMem, maxComps);
+          const offset = 2 * componentsCount;
+          _wl_object_get_component_types(this.objectId, _tempMem + offset, maxComps);
+          const jsManagerIndex = $Object._typeIndexFor("js");
+          for (let i = 0; i < componentsCount; ++i) {
+            const t = _tempMemUint8[i + offset];
+            const componentId = _tempMemUint16[i];
+            if (t == jsManagerIndex) {
+              const comp = _WL._components[_wl_get_js_component_index_for_id(componentId)];
+              if (componentType === null || comp.type == type)
+                components.push(comp);
+              continue;
+            }
+            if (componentType === null) {
+              const managerName = $Object._typeNameFor(t);
+              components.push(_wrapComponent(managerName, t, componentId));
+            } else if (t == componentType) {
+              components.push(_wrapComponent(type, componentType, componentId));
+            }
+          }
+          return components;
+        }
+        /**
+         * Add component of given type to the object.
+         *
+         * You can use this function to clone components, see the example below.
+         *
+         * ```js
+         *  // Clone existing component (since 0.8.10)
+         *  let original = this.object.getComponent('mesh');
+         *  otherObject.addComponent('mesh', original);
+         *  // Create component from parameters
+         *  this.object.addComponent('mesh', {
+         *      mesh: someMesh,
+         *      material: someMaterial,
+         *  });
+         * ```
+         *
+         * @param typeOrClass Typename to create a component of. Can be native or
+         *     custom JavaScript component type. It's also possible to give a class definition.
+         *     In this case, the method will use the `class.TypeName` field.
+         * @param params Parameters to initialize properties of the new component,
+         *      can be another component to copy properties from.
+         *
+         * @returns {?(Component|CollisionComponent|TextComponent|ViewComponent|MeshComponent|InputComponent|LightComponent|AnimationComponent|PhysXComponent)} The component or {@link null} if the type was not found
+         */
+        addComponent(typeOrClass, params) {
+          const type = isString(typeOrClass) ? typeOrClass : typeOrClass.TypeName;
+          const componentType = $Object._typeIndexFor(type);
+          let component = null;
+          let componentIndex = null;
+          if (componentType < 0) {
+            if (!(type in _WL._componentTypeIndices)) {
+              throw new TypeError("Unknown component type '" + type + "'");
+            }
+            const componentId = _wl_object_add_js_component(this.objectId, _WL._componentTypeIndices[type]);
+            componentIndex = _wl_get_js_component_index_for_id(componentId);
+            component = _WL._components[componentIndex];
+          } else {
+            const componentId = _wl_object_add_component(this.objectId, componentType);
+            component = _wrapComponent(type, componentType, componentId);
+          }
+          if (params !== void 0) {
+            for (const key in params) {
+              if (EXCLUDED_COMPONENT_PROPERTIES.includes(key))
+                continue;
+              component[key] = params[key];
+            }
+          }
+          if (componentType < 0) {
+            _wljs_component_init(componentIndex);
+          }
+          if (!params || !("active" in params && !params.active)) {
+            component.active = true;
+          }
+          return component;
+        }
+        /**
+         * Whether given object's transformation has changed.
+         */
+        get changed() {
+          return !!_wl_object_is_changed(this.objectId);
+        }
+        /**
+         * Checks equality by comparing whether the wrapped native component ids
+         * and component manager types are equal.
+         *
+         * @param otherObject Object to check equality with.
+         * @returns Whether this object equals the given object.
+         */
+        equals(otherObject) {
+          if (!otherObject)
+            return false;
+          return this.objectId == otherObject.objectId;
+        }
+        /**
+         * Used internally.
+         *
+         * @param type The type
+         * @return The component type
+         */
+        static _typeIndexFor(type) {
+          const lengthBytes = lengthBytesUTF8(type) + 1;
+          const mem = _malloc(lengthBytes);
+          stringToUTF8(type, mem, lengthBytes);
+          const componentType = _wl_get_component_manager_index(mem);
+          _free(mem);
+          return componentType;
+        }
+        /**
+         * Used internally.
+         *
+         * @param typeIndex The type index
+         * @return The name as a string
+         */
+        static _typeNameFor(typeIndex) {
+          return UTF8ToString(_wl_component_manager_name(typeIndex));
+        }
+      };
+      Skin = class {
+        constructor(index) {
+          this._index = index;
+        }
+        /** Amount of joints in this skin. */
+        get jointCount() {
+          return _wl_skin_get_joint_count(this._index);
+        }
+        /** Joints object ids for this skin */
+        get jointIds() {
+          return new Uint16Array(HEAPU16.buffer, _wl_skin_joint_ids(this._index), this.jointCount);
+        }
+        /**
+         * Dual quaternions in a flat array of size 8 times {@link jointCount}.
+         *
+         * Inverse bind transforms of the skin.
+         */
+        get inverseBindTransforms() {
+          return new Float32Array(HEAPF32.buffer, _wl_skin_inverse_bind_transforms(this._index), 8 * this.jointCount);
+        }
+        /**
+         * Vectors in a flat array of size 3 times {@link jointCount}.
+         *
+         * Inverse bind scalings of the skin.
+         */
+        get inverseBindScalings() {
+          return new Float32Array(HEAPF32.buffer, _wl_skin_inverse_bind_scalings(this._index), 3 * this.jointCount);
+        }
+      };
+    }
+  });
+
+  // node_modules/@wonderlandengine/api/index.js
+  var init_api = __esm({
+    "node_modules/@wonderlandengine/api/index.js"() {
+      init_esm();
+      init_wonderland();
+    }
+  });
+
   // js/PostSpawner.js
   var PostSpawner_exports = {};
   var planets;
   var init_PostSpawner = __esm({
     "js/PostSpawner.js"() {
       init_index_esm2017();
+      init_api();
       init_firestore_api();
       planets = /* @__PURE__ */ new Map();
       WL.registerComponent("PostSpawner", {
@@ -14634,6 +17083,14 @@ input:focus ~ .input-border {
           console.log("init() with param", this.param);
         },
         start: function() {
+          this.textures = [];
+          [].forEach((file) => {
+            WL.textures.load(this.url, "anonymous").then(
+              (texture) => {
+                this.textures.push(textures);
+              }
+            );
+          });
           console.log("start() with param", this.param);
           let updatePosts;
           updatePosts = () => {
@@ -14645,7 +17102,7 @@ input:focus ~ .input-border {
                   var newMesh = newObj.addComponent("mesh");
                   var newInfo = newObj.addComponent("planetPostInfo");
                   newMesh.mesh = this.mesh;
-                  newMesh.material = this.material;
+                  newMesh.material = this.material.clone();
                   newInfo.planet_id = post.ref.id;
                   if (planets.length == 0)
                     newObj.translateWorld = this.object.translateWorld;
