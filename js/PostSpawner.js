@@ -12,15 +12,7 @@ WL.registerComponent('PostSpawner', {
         console.log('init() with param', this.param);
     },
     start: function() {//add all textures
-        this.textures = [];
-        [].forEach(file => {
-            WL.textures.load(this.url, 'anonymous')
-                .then((texture) => {
-                        this.textures.push(textures);
-                }
-                );
-        });
-
+        
         console.log('start() with param', this.param);
             // setTimeout recursively to make sure it waits for the last request to finish
             let updatePosts;
@@ -36,23 +28,20 @@ WL.registerComponent('PostSpawner', {
                             newObj.addComponent("planetOnCollision");
                             
                             newMesh.mesh = this.mesh;
-                            newMesh.material = this.material.clone();
-                            //newMesh.material.diffuseTexture = ...
-
+                            var mat =this.material.clone();
+                            console.log(this.textures);
+                            newMesh.material = mat;
+                            mat.diffuseTexture = this.textures[Math.floor(Math.random() * this.textures.length)];
                             newInfo.planet_id = post.ref.id;
-
                             post.data().comments.forEach((comment) => {
                                 newObj.rotateAxisAngleRadObject([1,0,0], Math.random())
                                 var moonObj = WL.scene.addObject(newObj);
                                 moonObj.scalingWorld = [0.3,0.3,0.3]
                                 var moonMesh = moonObj.addComponent("mesh");
-
                                 moonMesh.mesh = this.moon_mesh;
                                 moonMesh.material = this.moon_material;
-
                                 moonObj.addComponent('moonRotation', {speed: 360*Math.random()});
                             })
-
                             if (planets.length == 0)
                                 newObj.translateWorld = this.object.translateWorld;
                             else{
@@ -69,14 +58,23 @@ WL.registerComponent('PostSpawner', {
                             newObj.addComponent("planetRotation");
                             console.log(newObj.transformLocal);
                             planets.set(post.ref.id, {data: post.data(), object: newObj});
-
                             console.log('PostSpawner: ', newObj.getComponent('planetPostInfo').planet_id);
                         }
                     });
                     setTimeout(updatePosts, 5000);
                 })
             }
-            updatePosts();
+            this.textures = [];
+        ["1.webp","2.webp","3.webp","4.webp","5.webp","6.webp","7.webp","8.webp","9.webp","10.webp","11.webp","12.webp","13.webp","14.webp"].forEach(file => {
+            WL.textures.load("planettextures/"+ file, 'anonymous')
+                .then((texture) => {
+                        this.textures.push(texture);
+                        if (this.textures.length == 5){
+                            updatePosts();
+                        }
+                }
+                );
+        });
     },
     update: function(dt) {
     },
