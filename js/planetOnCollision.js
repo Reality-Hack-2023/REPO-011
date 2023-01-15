@@ -28,8 +28,8 @@ WL.registerComponent('planetOnCollision', {
                     element.disabled = false;
                 });
 
-                if (planets.length > 0) {
-                    this.postPreviewObj.getComponent("uiHandler").setPost(planets[currentlyClicked].data.text)
+                if (currentlyClicked.clicked) {
+                    this.postPreviewObj.getComponent("uiHandler").setPost(planets.get(currentlyClicked.clicked).data.text)
                     this.postPreviewObj.active = true;
                 }
 
