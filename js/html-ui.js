@@ -1,4 +1,5 @@
 import { getPosts, newPost, newComment, newLikes, db } from './firestore-api.js';
+import { planet_identifier } from './planetOnCollision.js';
 
 const HTMLCode = `
 <style>
@@ -212,11 +213,11 @@ input:focus ~ .input-border {
 
 <div class='button-container'>
   <div class='content'>
-  <button class="inactive_button" disabled><i class="fas fa-comment"></i></button>
+  <button class="inactive_button" onclick="writeComment()" disabled><i class="fas fa-comment"></i></button>
   </div>
 
   <div class='content'>
-  <button class="inactive_button" disabled><i class="fas fa-heart"></i></button>
+  <button class="inactive_button" onclick="likePost()" disabled><i class="fas fa-heart"></i></button>
   </div>
 
   <div class='content'>
@@ -231,6 +232,18 @@ window.openForm = function() {
 window.closeForm = function() {
   document.getElementById("post-form").style.display = "none";
   newPost(db, document.getElementById("author").value, document.getElementById("text").value);
+}
+
+window.likePost = function() {
+  if (planet_identifier != null) {
+    newLikes(db, planet_identifier);
+  }
+}
+
+window.writeComment = function() {
+  if (planet_identifier != null) {
+    newComment(db, planet_identifier, );
+  }
 }
 
 WL.registerComponent('html-ui', {

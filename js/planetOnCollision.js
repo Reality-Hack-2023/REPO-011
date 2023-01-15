@@ -1,5 +1,7 @@
 import './html-ui.js';
 
+let planet_identifier = null;
+
 WL.registerComponent('planetOnCollision', {
     material_org: {type: WL.Type.Material},
     material_change: {type: WL.Type.Material},
@@ -14,6 +16,7 @@ WL.registerComponent('planetOnCollision', {
             console.log("entered click function");
             if (!selected) {
                 console.log("selected");
+                planet_identifier = this.getComponent("planetPostInfo").planet_id;
                 var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
                 newMesh.material = this.material_change;
                 var allInactiveButtons = document.querySelectorAll(".inactive_button");
@@ -38,3 +41,5 @@ WL.registerComponent('planetOnCollision', {
     update: function(dt) {
     },
 });
+
+export { planet_identifier }
