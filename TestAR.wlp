@@ -417,9 +417,9 @@
             "name": "Pink",
             "Phong": {
                 "diffuseColor": [
-                    0.9098039,
-                    0.0,
-                    0.5411764,
+                    1.0,
+                    1.0,
+                    1.0,
                     1.0
                 ],
                 "specularColor": [
@@ -430,12 +430,21 @@
                 ],
                 "shininess": 10,
                 "ambientColor": [
-                    0.317647,
                     0.0,
-                    0.2165777,
+                    0.0,
+                    0.0,
                     1.0
-                ]
-            }
+                ],
+                "diffuseTexture": "64",
+                "fogColor": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    0.0745098
+                ],
+                "ambientFactor": 0.15
+            },
+            "pipeline": "38"
         },
         "25": {
             "name": "Yellow",
