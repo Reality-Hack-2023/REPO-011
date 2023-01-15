@@ -17177,14 +17177,6 @@ input:focus ~ .input-border {
           console.log("init() with param", this.param);
         },
         start: function() {
-          this.textures = [];
-          [].forEach((file) => {
-            WL.textures.load(this.url, "anonymous").then(
-              (texture) => {
-                this.textures.push(textures);
-              }
-            );
-          });
           console.log("start() with param", this.param);
           let updatePosts;
           updatePosts = () => {
@@ -17197,7 +17189,10 @@ input:focus ~ .input-border {
                   var newInfo = newObj.addComponent("planetPostInfo");
                   newObj.addComponent("planetOnCollision");
                   newMesh.mesh = this.mesh;
-                  newMesh.material = this.material.clone();
+                  var mat2 = this.material.clone();
+                  console.log(this.textures);
+                  newMesh.material = mat2;
+                  mat2.diffuseTexture = this.textures[Math.floor(Math.random() * this.textures.length)];
                   newInfo.planet_id = post.ref.id;
                   post.data().comments.forEach((comment) => {
                     newObj.rotateAxisAngleRadObject([1, 0, 0], Math.random());
@@ -17227,7 +17222,17 @@ input:focus ~ .input-border {
               setTimeout(updatePosts, 5e3);
             });
           };
-          updatePosts();
+          this.textures = [];
+          ["1.webp", "2.webp", "3.webp", "4.webp", "5.webp", "6.webp", "7.webp", "8.webp", "9.webp", "10.webp", "11.webp", "12.webp", "13.webp", "14.webp"].forEach((file) => {
+            WL.textures.load("planettextures/" + file, "anonymous").then(
+              (texture) => {
+                this.textures.push(texture);
+                if (this.textures.length == 5) {
+                  updatePosts();
+                }
+              }
+            );
+          });
         },
         update: function(dt2) {
         }
