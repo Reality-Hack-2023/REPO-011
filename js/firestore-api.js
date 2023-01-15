@@ -20,15 +20,12 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-let posts_list = null;
 
 // Get a list of cities from your database
 async function getPosts(db) {
-  const posts = collection(db, 'posts');
-  const postsSnapshot = await getDocs(posts);
-  const postsList = postsSnapshot.docs.map(doc => doc.data());
-  posts_list = postsList;
-  return posts_list;
+  const posts = collection(db, '/posts');
+  postsSnapshot = await getDocs(posts);
+  return postsSnapshot.docs;
 }
 
 async function newPost(db, author, text){
@@ -59,4 +56,8 @@ async function newLikes(db, postDoc){
   });
 }
 
-export { getPosts, newPost, newComment, newLikes, db,posts_list }
+// getPosts(db).then((result) => {
+//     console.log('YO', result)
+// })
+
+export { getPosts, newPost, newComment, newLikes, db }
