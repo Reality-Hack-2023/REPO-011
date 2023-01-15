@@ -1,13 +1,35 @@
 WL.registerComponent('moonSpawner', {
-    param: {type: WL.Type.Float, default: 1.0},
+    num_moons: {type: WL.Type.Int, default: 0},
+    mesh: {type: WL.Type.Mesh},
+    material: {type: WL.Type.Material},
 }, {
     init: function() {
-        console.log('init() with param', this.param);
+        
     },
     start: function() {
-        console.log('start() with param', this.param);
+        // this.last_num_moons = this.num_moons;
+        var newObj = WL.scene.addObject();
+        var newMesh = newObj.addComponent("mesh");
+
+        newMesh.mesh = this.mesh;
+        newMesh.material = this.material;
+
+        
+        var moonRotation = newObj.addComponent('moonRotation');
+        
+
     },
     update: function(dt) {
-        console.log('update() with delta time', dt);
+        // if(this.last_num_moons != this.num_moons){
+        //     for(let i = last_num_moons; i < this.num_moons; ++i){
+        //         var newObj = WL.scene.addObject();
+        //         var newMesh = newObj.addComponent("mesh");
+
+        //         newMesh.mesh = this.mesh;
+        //         newMesh.material = this.material;
+
+        //         newObj.addComponent('moonRotation');
+        //     }
+        // }
     },
 });

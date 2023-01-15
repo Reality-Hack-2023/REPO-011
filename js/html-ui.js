@@ -1,4 +1,5 @@
 import { getPosts, newPost, newComment, newLikes, db } from './firestore-api.js';
+import { planet_identifier } from './planetOnCollision.js';
 
 const HTMLCode = `
 <style>
@@ -206,31 +207,59 @@ input:focus ~ .input-border {
     <label for="text">Text:</label>
     <textarea class="input" Placeholder="Type here" name="text" id="text" required></textarea>
     <br>
-    <button type="button" id="submit-button" onclick="closeForm()">Submit</button>
+    <button type="button" id="submit-button" onclick="closePost()">Submit</button>
+  </form>
+</div>
+
+<div id="comment-form" style="display: none;" class='content postForm'>
+  <form>
+    <label for="text">Comment:</label>
+    <textarea class="input" Placeholder="Type here" name="comment" id="comment" required></textarea>
+    <br>
+    <button type="button" id="submit-button" onclick="closeComment()">Submit</button>
   </form>
 </div>
 
 <div class='button-container'>
   <div class='content'>
-  <button class="inactive_button" disabled><i class="fas fa-comment"></i></button>
+  <button class="inactive_button" onclick="openComment()" disabled><i class="fas fa-comment"></i></button>
   </div>
 
   <div class='content'>
-  <button class="inactive_button" disabled><i class="fas fa-heart"></i></button>
+  <button class="inactive_button" onclick="likePost()" disabled><i class="fas fa-heart"></i></button>
   </div>
 
   <div class='content'>
-  <button class="post_button" onclick="openForm()"><i class="fas fa-pen"></i></button>
+  <button class="post_button" onclick="openPost()"><i class="fas fa-pen"></i></button>
   </div>
 </div>
 `
-window.openForm = function() {
+window.openPost = function() {
   document.getElementById("post-form").style.display = "block";
 }
 
-window.closeForm = function() {
+window.closePost = function() {
   document.getElementById("post-form").style.display = "none";
   newPost(db, document.getElementById("author").value, document.getElementById("text").value);
+}
+
+window.likePost = function() {
+  if (planet_identifier != null) {
+    newLikes(db, planet_identifier);
+  }
+}
+
+window.openComment = function() {
+  if (planet_identifier != null) {
+    document.getElementById("comment-form").style.display = "block";
+  }
+}
+
+window.closeComment = function() {
+  if (planet_identifier != null) {
+    document.getElementById("comment-form").style.display = "none";
+    newComment(db, planet_identifier, document.getElementById("comment").value);
+  }
 }
 
 WL.registerComponent('html-ui', {
