@@ -20,6 +20,7 @@ WL.registerComponent('planetOnCollision', {
                     console.log("Clicked:", currentlyClicked)
                 }
                 var newMesh = this.object.getComponent("mesh");
+                this.material_org = newMesh.material;
                 newMesh.material = this.material_change;
 
                 var allInactiveButtons = document.querySelectorAll(".inactive_button");
@@ -34,6 +35,8 @@ WL.registerComponent('planetOnCollision', {
                 }
 
                 this.postPreviewObj.setTranslationWorld(glMatrix.vec3.add([], this.object.getTranslationWorld([]), [0, 2, 0]));
+                this.postPreviewObj.lookAt(WL.scene.activeViews[0].object.getTranslationWorld([]));
+                this.postPreviewObj.rotateAxisAngleDegObject([0, 1, 0], 180);
 
                 selected = true;
             } else {
