@@ -290,5 +290,5 @@ WL.registerComponent('html-ui', {
     },
 });
 
-export {planets, currentlyClicked};
+export {planets, currentlyClicked, };
 
