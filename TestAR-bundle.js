@@ -18378,7 +18378,7 @@ input:focus ~ .input-border {
             }
           };
           const content = {
-            main: planets[currentlyClicked].data.text
+            main: currentlyClicked != null ? planets[currentlyClicked].data.text : "test text"
           };
           this.ui = new CanvasUI(content, config, this.object);
           this.ui.update();
