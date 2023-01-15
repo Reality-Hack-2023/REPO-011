@@ -14365,12 +14365,68 @@
     }
   });
 
+  // js/planetOnCollision.js
+  var planetOnCollision_exports = {};
+  __export(planetOnCollision_exports, {
+    planet_identifier: () => planet_identifier
+  });
+  var planet_identifier;
+  var init_planetOnCollision = __esm({
+    "js/planetOnCollision.js"() {
+      init_html_ui();
+      planet_identifier = null;
+      WL.registerComponent("planetOnCollision", {
+        material_org: { type: WL.Type.Material },
+        material_change: { type: WL.Type.Material }
+      }, {
+        init: function() {
+          console.log("init() with param", this.param);
+        },
+        start: function() {
+          var cursor = this.object.getComponent("cursor-target");
+          var selected = false;
+          cursor.addClickFunction((o) => {
+            console.log("entered click function");
+            if (!selected) {
+              console.log("selected");
+              find_planet = this.object.getComponent("planetPostInfo");
+              if (find_planet != null) {
+                planet_identifier = find_planet.planet_id;
+              }
+              var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
+              newMesh.material = this.material_change;
+              var allInactiveButtons = document.querySelectorAll(".inactive_button");
+              allInactiveButtons.forEach((element) => {
+                element.className = "active_button";
+                element.disabled = false;
+              });
+              selected = true;
+            } else {
+              console.log("not selected");
+              var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
+              newMesh.material = this.material_org;
+              var allActiveButtons = document.querySelectorAll(".active_button");
+              allActiveButtons.forEach((element) => {
+                element.className = "inactive_button";
+                element.disabled = true;
+              });
+              selected = false;
+            }
+          });
+        },
+        update: function(dt2) {
+        }
+      });
+    }
+  });
+
   // js/html-ui.js
   var html_ui_exports = {};
   var HTMLCode;
   var init_html_ui = __esm({
     "js/html-ui.js"() {
       init_firestore_api();
+      init_planetOnCollision();
       HTMLCode = `
 <style>
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css');
@@ -14583,11 +14639,11 @@ input:focus ~ .input-border {
 
 <div class='button-container'>
   <div class='content'>
-  <button class="inactive_button" disabled><i class="fas fa-comment"></i></button>
+  <button class="inactive_button" onclick="writeComment()" disabled><i class="fas fa-comment"></i></button>
   </div>
 
   <div class='content'>
-  <button class="inactive_button" disabled><i class="fas fa-heart"></i></button>
+  <button class="inactive_button" onclick="likePost()" disabled><i class="fas fa-heart"></i></button>
   </div>
 
   <div class='content'>
@@ -14601,6 +14657,16 @@ input:focus ~ .input-border {
       window.closeForm = function() {
         document.getElementById("post-form").style.display = "none";
         newPost(db, document.getElementById("author").value, document.getElementById("text").value);
+      };
+      window.likePost = function() {
+        if (planet_identifier != null) {
+          newLikes(db, planet_identifier);
+        }
+      };
+      window.writeComment = function() {
+        if (planet_identifier != null) {
+          newComment(db, planet_identifier);
+        }
       };
       WL.registerComponent("html-ui", {}, {
         start: function() {
@@ -17101,13 +17167,20 @@ input:focus ~ .input-border {
                   var newObj = WL.scene.addObject();
                   var newMesh = newObj.addComponent("mesh");
                   var newInfo = newObj.addComponent("planetPostInfo");
+                  newObj.addComponent("planetOnCollision");
                   newMesh.mesh = this.mesh;
                   newMesh.material = this.material.clone();
                   newInfo.planet_id = post.ref.id;
                   if (planets.length == 0)
                     newObj.translateWorld = this.object.translateWorld;
-                  else
-                    newObj.setTranslationWorld([0, 0.5, 0]);
+                  else {
+                    const minAngle = 0;
+                    const maxAngle = -180;
+                    const angle = Math.random() * (maxAngle - minAngle) + minAngle;
+                    const x2 = Math.cos(angle) * 10;
+                    const y2 = Math.sin(angle) * 10;
+                    newObj.setTranslationWorld([Math.abs(x2), Math.abs(Math.floor(Math.random() * 7)), -Math.abs(y2)]);
+                  }
                   newObj.addComponent("planetRotation");
                   console.log(newObj.transformLocal);
                   planets.set(post.ref.id, { data: post.data(), object: newObj });
@@ -17153,52 +17226,6 @@ input:focus ~ .input-border {
         },
         update: function(dt2) {
           this.object.rotateAxisAngleDegObject([0, 1, 0], dt2 * 10);
-        }
-      });
-    }
-  });
-
-  // js/planetOnCollision.js
-  var planetOnCollision_exports = {};
-  var init_planetOnCollision = __esm({
-    "js/planetOnCollision.js"() {
-      init_html_ui();
-      WL.registerComponent("planetOnCollision", {
-        material_org: { type: WL.Type.Material },
-        material_change: { type: WL.Type.Material }
-      }, {
-        init: function() {
-          console.log("init() with param", this.param);
-        },
-        start: function() {
-          var cursor = this.object.getComponent("cursor-target");
-          var selected = false;
-          cursor.addClickFunction((o) => {
-            console.log("entered click function");
-            if (!selected) {
-              console.log("selected");
-              var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
-              newMesh.material = this.material_change;
-              var allInactiveButtons = document.querySelectorAll(".inactive_button");
-              allInactiveButtons.forEach((element) => {
-                element.className = "active_button";
-                element.disabled = false;
-              });
-              selected = true;
-            } else {
-              console.log("not selected");
-              var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
-              newMesh.material = this.material_org;
-              var allActiveButtons = document.querySelectorAll(".active_button");
-              allActiveButtons.forEach((element) => {
-                element.className = "inactive_button";
-                element.disabled = true;
-              });
-              selected = false;
-            }
-          });
-        },
-        update: function(dt2) {
         }
       });
     }

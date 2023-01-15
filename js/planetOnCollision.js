@@ -13,10 +13,11 @@ WL.registerComponent('planetOnCollision', {
         var cursor = this.object.getComponent("cursor-target");
         var selected = false;
         cursor.addClickFunction( o=>{
-            console.log("entered click function");
             if (!selected) {
-                console.log("selected");
-                planet_identifier = this.getComponent("planetPostInfo").planet_id;
+                find_planet = this.object.getComponent("planetPostInfo");
+                if (find_planet != null) {
+                    planet_identifier = find_planet.planet_id;
+                }
                 var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
                 newMesh.material = this.material_change;
                 var allInactiveButtons = document.querySelectorAll(".inactive_button");
@@ -26,7 +27,6 @@ WL.registerComponent('planetOnCollision', {
                 });
                 selected = true;
             } else {
-                console.log("not selected");
                 var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
                 newMesh.material = this.material_org;
                 var allActiveButtons = document.querySelectorAll(".active_button");
