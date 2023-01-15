@@ -14314,13 +14314,15 @@
     getPosts: () => getPosts,
     newComment: () => newComment,
     newLikes: () => newLikes,
-    newPost: () => newPost
+    newPost: () => newPost,
+    posts_list: () => posts_list
   });
   async function getPosts(db2) {
     const posts = Nn(db2, "posts");
     const postsSnapshot = await zr(posts);
     const postsList = postsSnapshot.docs.map((doc) => doc.data());
     posts_list = postsList;
+    return posts_list;
   }
   async function newPost(db2, author, text) {
     const postRef = await Yr(Nn(db2, "posts"), {
@@ -14557,9 +14559,11 @@ h2 {
 
   // js/PostSpawner.js
   var PostSpawner_exports = {};
+  var spheres;
   var init_PostSpawner = __esm({
     "js/PostSpawner.js"() {
       init_firestore_api();
+      spheres = [];
       WL.registerComponent("PostSpawner", {
         param: { type: WL.Type.Float, default: 1 }
       }, {
@@ -14569,9 +14573,28 @@ h2 {
         start: function() {
           console.log("start() with param", this.param);
           getPosts(db).then(console.log);
+          async function callGetPosts(db2) {
+            setInterval(async () => {
+              const posts = await getPosts(db2);
+              for (let i = 0; i < posts_list.length; ++i) {
+                console.log(posts);
+                var newObj = WL.scene.addObject();
+                var newMesh = newObj.addComponent("mesh");
+                newMesh.mesh = this.mesh;
+                newMesh.material = this.material;
+                if (spheres.length == 0)
+                  newObj.translateWorld = this.object.translateWorld;
+                else
+                  newObj.setTranslationWorld(glMatrix.vec3.add([], spheres[spheres.length - 1].getTranslationWorld([]), [1.5, 0, 0]));
+                newObj.addComponent("planetRotation");
+                spheres.push(newObj);
+                console.log(newObj.transformLocal);
+              }
+            }, 5e3);
+          }
+          callGetPosts();
         },
         update: function(dt2) {
-          console.log("update() with delta time", dt2);
         }
       });
     }
@@ -14593,6 +14616,66 @@ h2 {
     }
   });
 
+  // js/planetOnCollision.js
+  var require_planetOnCollision = __commonJS({
+    "js/planetOnCollision.js"() {
+      WL.registerComponent("planetOnCollision", {
+        material_org: { type: WL.Type.Material },
+        material_change: { type: WL.Type.Material }
+      }, {
+        init: function() {
+          console.log("init() with param", this.param);
+        },
+        start: function() {
+          var cursor = this.object.getComponent("cursor-target");
+          cursor.addHoverFunction((o) => {
+            var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
+            newMesh.material = this.material_change;
+          });
+          cursor.addUnHoverFunction((o) => {
+            var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
+            newMesh.material = this.material_org;
+          });
+        },
+        update: function(dt2) {
+        }
+      });
+    }
+  });
+
+  // js/planetSpawner.js
+  var require_planetSpawner = __commonJS({
+    "js/planetSpawner.js"() {
+      var spheres2 = [];
+      WL.registerComponent("planetSpawner", {
+        mesh: { type: WL.Type.Mesh },
+        material: { type: WL.Type.Material }
+      }, {
+        init: function() {
+          console.log("init() with param", this.param);
+        },
+        start: function() {
+          var cursor = this.object.getComponent("cursor-target");
+          cursor.addClickFunction((o) => {
+            var newObj = WL.scene.addObject();
+            var newMesh = newObj.addComponent("mesh");
+            newMesh.mesh = this.mesh;
+            newMesh.material = this.material;
+            if (spheres2.length == 0)
+              newObj.translateWorld = this.object.translateWorld;
+            else
+              newObj.setTranslationWorld(glMatrix.vec3.add([], spheres2[spheres2.length - 1].getTranslationWorld([]), [1.5, 0, 0]));
+            newObj.addComponent("planetRotation");
+            spheres2.push(newObj);
+            console.log(newObj.transformLocal);
+          });
+        },
+        update: function(dt2) {
+        }
+      });
+    }
+  });
+
   // js/bundle.js
   require_thwall_camera();
   require_components();
@@ -14600,6 +14683,8 @@ h2 {
   init_html_ui();
   init_PostSpawner();
   require_planetRotation();
+  require_planetOnCollision();
+  require_planetSpawner();
 })();
 /*! Bundled license information:
 
