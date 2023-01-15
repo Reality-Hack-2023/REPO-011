@@ -4,6 +4,8 @@ var planets = new Map();
 WL.registerComponent('PostSpawner', {
     mesh: {type: WL.Type.Mesh},
     material: {type: WL.Type.Material},
+    moon_mesh: {type: WL.Type.Mesh},
+    moon_material: {type: WL.Type.Material},
 }, {
     init: function() {
         console.log('init() with param', this.param);
@@ -25,6 +27,17 @@ WL.registerComponent('PostSpawner', {
                             newMesh.mesh = this.mesh;
                             newMesh.material = this.material;
                             newInfo.planet_id = post.ref.id;
+
+                            post.data().comments.forEach((comment) => {
+                                var moonObj = WL.scene.addObject(newObj);
+                                moonObj.scalingWorld = [0.3,0.3,0.3]
+                                var moonMesh = moonObj.addComponent("mesh");
+
+                                moonMesh.mesh = this.moon_mesh;
+                                moonMesh.material = this.moon_material;
+
+                                moonObj.addComponent('moonRotation');
+                            })
 
                             if (planets.length == 0)
                                 newObj.translateWorld = this.object.translateWorld;

@@ -7,6 +7,6 @@ WL.registerComponent('moonRotation', {
     start: function() {
     },
     update: function(dt) {
-        this.object.rotateAxisAngleDeg([0,0,1], dt*100);
+        this.object.rotateAxisAngleDeg([0,0,10], dt*100);
     },
 });
