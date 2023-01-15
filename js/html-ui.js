@@ -1,5 +1,4 @@
-import './firestore-api.js';
-import { newPost } from './firestore-api.js';
+import { getPosts, newPost, newComment, newLikes, db } from './firestore-api.js';
 
 const HTMLCode = `
 <style>
@@ -231,7 +230,7 @@ window.openForm = function() {
 
 window.closeForm = function() {
   document.getElementById("post-form").style.display = "none";
-  newPost(_, document.getElementById("author"), document.getElementById("text"));
+  newPost(db, document.getElementById("author"), document.getElementById("text"));
 }
 
 WL.registerComponent('html-ui', {
