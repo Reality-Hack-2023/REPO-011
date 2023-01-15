@@ -3,8 +3,6 @@ import { planets, currentlyClicked } from './html-ui.js';
 WL.registerComponent('planetOnCollision', {
     material_org: {type: WL.Type.Material},
     material_change: {type: WL.Type.Material},
-    canvas_mesh: {type: WL.Type.Mesh},
-    canvas_material: {type: WL.Type.Material},
     postPreviewObj: {type: WL.Type.Object},
 }, {
     init: function() {
