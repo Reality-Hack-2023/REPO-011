@@ -9,3 +9,4 @@ require('./planetOnCollision.js');
 require('./moonRotation.js');
 require('./uiHandler.js');
 require('./CanvasUI.js');
+require('./spawn-mesh-on-select.js')
