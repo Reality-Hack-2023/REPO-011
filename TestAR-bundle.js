@@ -3420,7 +3420,7 @@
       exports.setAxes = exports.sqlerp = exports.rotationTo = exports.equals = exports.exactEquals = exports.normalize = exports.sqrLen = exports.squaredLength = exports.len = exports.length = exports.lerp = exports.dot = exports.scale = exports.mul = exports.add = exports.set = exports.copy = exports.fromValues = exports.clone = void 0;
       var glMatrix2 = _interopRequireWildcard(require_common());
       var mat3 = _interopRequireWildcard(require_mat3());
-      var vec38 = _interopRequireWildcard(require_vec3());
+      var vec39 = _interopRequireWildcard(require_vec3());
       var vec4 = _interopRequireWildcard(require_vec4());
       function _getRequireWildcardCache(nodeInterop) {
         if (typeof WeakMap !== "function")
@@ -3714,16 +3714,16 @@
       var equals = vec4.equals;
       exports.equals = equals;
       var rotationTo = function() {
-        var tmpvec3 = vec38.create();
-        var xUnitVec3 = vec38.fromValues(1, 0, 0);
-        var yUnitVec3 = vec38.fromValues(0, 1, 0);
+        var tmpvec3 = vec39.create();
+        var xUnitVec3 = vec39.fromValues(1, 0, 0);
+        var yUnitVec3 = vec39.fromValues(0, 1, 0);
         return function(out, a, b2) {
-          var dot2 = vec38.dot(a, b2);
+          var dot2 = vec39.dot(a, b2);
           if (dot2 < -0.999999) {
-            vec38.cross(tmpvec3, xUnitVec3, a);
-            if (vec38.len(tmpvec3) < 1e-6)
-              vec38.cross(tmpvec3, yUnitVec3, a);
-            vec38.normalize(tmpvec3, tmpvec3);
+            vec39.cross(tmpvec3, xUnitVec3, a);
+            if (vec39.len(tmpvec3) < 1e-6)
+              vec39.cross(tmpvec3, yUnitVec3, a);
+            vec39.normalize(tmpvec3, tmpvec3);
             setAxisAngle(out, tmpvec3, Math.PI);
             return out;
           } else if (dot2 > 0.999999) {
@@ -3733,7 +3733,7 @@
             out[3] = 1;
             return out;
           } else {
-            vec38.cross(tmpvec3, a, b2);
+            vec39.cross(tmpvec3, a, b2);
             out[0] = tmpvec3[0];
             out[1] = tmpvec3[1];
             out[2] = tmpvec3[2];
@@ -4615,8 +4615,8 @@
       exports.quat2 = quat25;
       var vec2 = _interopRequireWildcard(require_vec2());
       exports.vec2 = vec2;
-      var vec38 = _interopRequireWildcard(require_vec3());
-      exports.vec3 = vec38;
+      var vec39 = _interopRequireWildcard(require_vec3());
+      exports.vec3 = vec39;
       var vec4 = _interopRequireWildcard(require_vec4());
       exports.vec4 = vec4;
       function _getRequireWildcardCache(nodeInterop) {
@@ -17186,12 +17186,13 @@ input:focus ~ .input-border {
                   newMesh.material = this.material.clone();
                   newInfo.planet_id = post.ref.id;
                   post.data().comments.forEach((comment) => {
+                    newObj.rotateAxisAngleRadObject([1, 0, 0], Math.random());
                     var moonObj = WL.scene.addObject(newObj);
                     moonObj.scalingWorld = [0.3, 0.3, 0.3];
                     var moonMesh = moonObj.addComponent("mesh");
                     moonMesh.mesh = this.moon_mesh;
                     moonMesh.material = this.moon_material;
-                    moonObj.addComponent("moonRotation");
+                    moonObj.addComponent("moonRotation", { speed: 360 * Math.random() });
                   });
                   if (planets.length == 0)
                     newObj.translateWorld = this.object.translateWorld;
@@ -17254,18 +17255,58 @@ input:focus ~ .input-border {
   });
 
   // js/moonRotation.js
-  var require_moonRotation = __commonJS({
+  var moonRotation_exports = {};
+  var import_gl_matrix9;
+  var init_moonRotation = __esm({
     "js/moonRotation.js"() {
+      import_gl_matrix9 = __toESM(require_cjs());
       WL.registerComponent("moonRotation", {
-        speed: { type: WL.Type.Float, default: 100 }
+        speed: { type: WL.Type.Float, default: 100 },
+        x: { type: WL.Type.Float, default: 0 },
+        y: { type: WL.Type.Float, default: 1 },
+        z: { type: WL.Type.Float, default: 0 }
       }, {
         init: function() {
           console.log("init() with param", this.param);
         },
         start: function() {
+          console.log(this.x, this.y, this.z);
+          this.mag = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+          this.axis = [this.x, this.y, this.z];
+          import_gl_matrix9.vec3.normalize(this.axis, this.axis);
+          this.object.translate([0, 0, 2]);
         },
         update: function(dt2) {
-          this.object.rotateAxisAngleDeg([0, 0, 10], dt2 * 100);
+          this.object.rotateAxisAngleDeg(this.axis, this.speed * dt2);
+        }
+      });
+    }
+  });
+
+  // js/spawn-mesh-on-select.js
+  var require_spawn_mesh_on_select = __commonJS({
+    "js/spawn-mesh-on-select.js"() {
+      WL.registerComponent("spawn-mesh-on-select", {
+        /* The mesh to spawn */
+        mesh: { type: WL.Type.Mesh },
+        /* The material to spawn the mesh with */
+        material: { type: WL.Type.Material }
+      }, {
+        start: function() {
+          WL.onXRSessionStart.push(this.onXRSessionStart.bind(this));
+        },
+        onXRSessionStart: function(s) {
+          s.addEventListener("select", this.spawnMesh.bind(this));
+        },
+        spawnMesh: function() {
+          const o = WL.scene.addObject();
+          o.transformLocal = this.object.transformWorld;
+          o.scale([0.25, 0.25, 0.25]);
+          o.translate([0, 0.25, 0]);
+          const mesh = o.addComponent("mesh");
+          mesh.material = this.material;
+          mesh.mesh = this.mesh;
+          mesh.active = true;
         }
       });
     }
@@ -17280,7 +17321,8 @@ input:focus ~ .input-border {
   require_planetPostInfo();
   require_planetRotation();
   init_planetOnCollision();
-  require_moonRotation();
+  init_moonRotation();
+  require_spawn_mesh_on_select();
 })();
 /*! Bundled license information:
 
