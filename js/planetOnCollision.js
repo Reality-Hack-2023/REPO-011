@@ -17,7 +17,7 @@ WL.registerComponent('planetOnCollision', {
                 find_planet = this.object.getComponent("planetPostInfo");
                 if (find_planet != null) {
                     currentlyClicked.clicked = find_planet.planet_id;
-                    console.log("Clicked")
+                    console.log("Clicked:", currentlyClicked)
                 }
                 var newMesh = this.object.getComponent("mesh");
                 newMesh.material = this.material_change;

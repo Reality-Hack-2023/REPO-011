@@ -217,7 +217,7 @@ input:focus ~ .input-border {
     <label for="text">Comment:</label>
     <textarea class="input" Placeholder="Type here" name="comment" id="comment" required></textarea>
     <br>
-    <button type="button" id="submit-button" onclick="closeComment()">Submit</button>
+    <button type="button" id="submit-button" onclick="submitComment()">Submit</button>
   </form>
 </div>
 
@@ -257,18 +257,16 @@ window.openComment = function() {
 }
 
 window.submitComment = function() {
-  document.getElementById("comment-form").style.display = "none";
-  if(currentlyClicked){
-    newComment(db, currentlyClicked, document.getElementById("comment").value)
+  if(currentlyClicked.clicked){
+    newComment(db, currentlyClicked.clicked, document.getElementById("comment").value)
   }else{
     console.error("No plannet is clicked, how did u get here???")
   }
+  document.getElementById("comment-form").style.display = "none";
 }
 
 window.likePost = function() {
-  if (planet_identifier != null) {
-    newLikes(db, planet_identifier);
-  }
+  newLikes(db, currentlyClicked.clicked);
 }
 
 WL.registerComponent('html-ui', {
