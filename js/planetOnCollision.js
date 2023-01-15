@@ -15,6 +15,7 @@ WL.registerComponent('planetOnCollision', {
             var allInactiveButtons = document.querySelectorAll(".inactive_button");
             allInactiveButtons.forEach(element => {
                 element.className = "active_button";
+                element.disabled = false;
             });
         })
         cursor.addUnHoverFunction( o=>{
@@ -23,6 +24,7 @@ WL.registerComponent('planetOnCollision', {
             var allActiveButtons = document.querySelectorAll(".active_button");
             allActiveButtons.forEach(element => {
                 element.className = "inactive_button";
+                element.disabled = true;
             });
         })
     },

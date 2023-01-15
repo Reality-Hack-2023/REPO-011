@@ -171,11 +171,11 @@ h2 {
 
 <div class='button-container'>
   <div class='content'>
-  <button class="inactive_button"><i class="fas fa-comment"></i></button>
+  <button class="inactive_button" disabled><i class="fas fa-comment"></i></button>
   </div>
 
   <div class='content'>
-  <button class="inactive_button"><i class="fas fa-heart"></i></button>
+  <button class="inactive_button" disabled><i class="fas fa-heart"></i></button>
   </div>
 
   <div class='content'>
