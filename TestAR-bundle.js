@@ -14628,9 +14628,13 @@ h2 {
         },
         start: function() {
           var cursor = this.object.getComponent("cursor-target");
-          cursor.addClickFunction((o) => {
+          cursor.addHoverFunction((o) => {
             var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
             newMesh.material = this.material_change;
+          });
+          cursor.addUnHoverFunction((o) => {
+            var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
+            newMesh.material = this.material_org;
           });
         },
         update: function(dt2) {
