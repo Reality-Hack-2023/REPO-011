@@ -70,6 +70,12 @@
                 },
                 {
                     "type": "8thwall-camera0"
+                },
+                {
+                    "type": "cursor",
+                    "cursor": {
+                        "cursorObject": "86"
+                    }
                 }
             ]
         },
@@ -268,6 +274,9 @@
                     "mesh": {
                         "material": "26"
                     }
+                },
+                {
+                    "type": "cursor-target"
                 }
             ],
             "parent": "17"
@@ -278,7 +287,7 @@
                 "file": "assets\\stylized_planet\\scene.gltf"
             },
             "translation": [
-                -8.940696716308595e-8,
+                -8.940696716308596e-8,
                 2.0692152,
                 1.1999378
             ],
@@ -292,6 +301,26 @@
                 0.9999873,
                 1.0,
                 0.9999881
+            ],
+            "components": [
+                {
+                    "type": "collision",
+                    "collision": {
+                        "sphere": {
+                            "radius": 0.8999999
+                        }
+                    }
+                },
+                {
+                    "type": "cursor-target"
+                },
+                {
+                    "type": "planetOnCollision",
+                    "planetOnCollision": {
+                        "material_org": "66",
+                        "material_change": "22"
+                    }
+                }
             ]
         },
         "80": {
@@ -340,6 +369,34 @@
                 {
                     "type": "planetRotation"
                 }
+            ]
+        },
+        "86": {
+            "name": "cursor",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "9",
+                        "material": "87"
+                    }
+                }
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                3.0180497
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.0672,
+                0.0672,
+                0.0672
             ]
         }
     },
@@ -523,6 +580,17 @@
             "link": {
                 "name": "Planet",
                 "file": "assets\\stylized_planet\\scene.gltf"
+            }
+        },
+        "87": {
+            "name": "white white",
+            "Phong": {
+                "ambientColor": [
+                    0.6509803,
+                    0.638216,
+                    0.638216,
+                    1.0
+                ]
             }
         }
     },
