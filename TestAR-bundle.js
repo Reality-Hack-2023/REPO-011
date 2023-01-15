@@ -11925,7 +11925,10 @@
   function ts(...t) {
     return new Jn("arrayUnion", t);
   }
-  var d, w, m, T, A, R, P, V, $, D, F, x, S, q, O, k, C, L, U, B, Q, z, W, G, K, Y, H, J, X, Z, tt, et, nt, rt, ft, dt, wt, pt, gt, It, Tt, Vt, Ft, Qt, Wt, Gt, Kt, Ht, Jt, Xt, te, ee, ne, re, se, oe, ue, ce, ae, he, le, fe, de, we, me, ye, Re, Pe, Ve, $e, Ne, De, Fe, xe, Se, qe, Oe, ke, Ce, Le, Me, Ue, ln, pn, gn, _n, Pn, Vn, $n, qn, On, Cn, Ln, Mn, Un, jn, Qn, zn, Kn, Jn, cr, fr, dr, wr, Br;
+  function ns(t) {
+    return new Zn("increment", t);
+  }
+  var d, w, m, T, A, R, P, V, $, D, F, x, S, q, O, k, C, L, U, B, Q, z, W, G, K, Y, H, J, X, Z, tt, et, nt, rt, ft, dt, wt, pt, gt, It, Tt, Vt, Ft, Qt, Wt, Gt, Kt, Ht, Jt, Xt, te, ee, ne, re, se, oe, ue, ce, ae, he, le, fe, de, we, me, ye, Re, Pe, Ve, $e, Ne, De, Fe, xe, Se, qe, Oe, ke, Ce, Le, Me, Ue, ln, pn, gn, _n, Pn, Vn, $n, qn, On, Cn, Ln, Mn, Un, jn, Qn, zn, Kn, Jn, Zn, cr, fr, dr, wr, Br;
   var init_index_browser_esm2017 = __esm({
     "node_modules/@firebase/firestore/dist/lite/index.browser.esm2017.js"() {
       init_index_esm20174();
@@ -14097,6 +14100,18 @@
           return this === t;
         }
       };
+      Zn = class extends Cn {
+        constructor(t, e) {
+          super(t), this.wt = e;
+        }
+        _toFieldTransform(t) {
+          const e = new Ne(t.C, Ae(t.C, this.wt));
+          return new De(t.path, e);
+        }
+        isEqual(t) {
+          return this === t;
+        }
+      };
       cr = new RegExp("[~\\*/\\[\\]]");
       fr = class {
         // Note: This class is stripped down version of the DocumentSnapshot in
@@ -14342,7 +14357,7 @@
   async function newLikes(db2, postDoc) {
     const posts = Fn(db2, `posts/${postDoc}`);
     await Gr(posts, {
-      likes: increment(1)
+      likes: ns(1)
     });
   }
   var firebaseConfig, app, db;
@@ -14386,7 +14401,7 @@
               find_planet = this.object.getComponent("planetPostInfo");
               if (find_planet != null) {
                 currentlyClicked.clicked = find_planet.planet_id;
-                console.log("Clicked");
+                console.log("Clicked:", currentlyClicked);
               }
               var newMesh = this.object.getComponent("mesh");
               newMesh.material = this.material_change;
@@ -14647,7 +14662,7 @@ input:focus ~ .input-border {
     <label for="text">Comment:</label>
     <textarea class="input" Placeholder="Type here" name="comment" id="comment" required></textarea>
     <br>
-    <button type="button" id="submit-button" onclick="closeComment()">Submit</button>
+    <button type="button" id="submit-button" onclick="submitComment()">Submit</button>
   </form>
 </div>
 
@@ -14681,17 +14696,15 @@ input:focus ~ .input-border {
         document.getElementById("comment-form").style.display = "block";
       };
       window.submitComment = function() {
-        document.getElementById("comment-form").style.display = "none";
-        if (currentlyClicked) {
-          newComment(db, currentlyClicked, document.getElementById("comment").value);
+        if (currentlyClicked.clicked) {
+          newComment(db, currentlyClicked.clicked, document.getElementById("comment").value);
         } else {
           console.error("No plannet is clicked, how did u get here???");
         }
+        document.getElementById("comment-form").style.display = "none";
       };
       window.likePost = function() {
-        if (void 0 != null) {
-          newLikes(db, void 0);
-        }
+        newLikes(db, currentlyClicked.clicked);
       };
       WL.registerComponent("html-ui", {}, {
         start: function() {
