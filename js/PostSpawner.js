@@ -29,7 +29,7 @@ WL.registerComponent('PostSpawner', {
                             if (planets.length == 0)
                                 newObj.translateWorld = this.object.translateWorld;
                             else
-                                newObj.setTranslationWorld([Math.random() * 20 + 10, Math.random() * 20 + 10, 0]);
+                                newObj.setTranslationWorld([0,0.5,0]);
                             newObj.addComponent("planetRotation");
                             console.log(newObj.transformLocal);
 
