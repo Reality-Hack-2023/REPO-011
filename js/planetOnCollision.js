@@ -1,4 +1,4 @@
-import { currentlyClicked } from './html-ui.js';
+import { planets, currentlyClicked } from './html-ui.js';
 
 WL.registerComponent('planetOnCollision', {
     material_org: {type: WL.Type.Material},
@@ -28,7 +28,10 @@ WL.registerComponent('planetOnCollision', {
                     element.disabled = false;
                 });
 
-                this.postPreviewObj.getComponent("uiHandler").setPost()
+                if (planets.length > 0) {
+                    this.postPreviewObj.getComponent("uiHandler").setPost(planets[currentlyClicked].data.text)
+                    this.postPreviewObj.active = true;
+                }
 
                 this.postPreviewObj.setTranslationWorld(glMatrix.vec3.add([], this.object.getTranslationWorld([]), [0, 2, 0]));
 
@@ -43,9 +46,7 @@ WL.registerComponent('planetOnCollision', {
                     element.disabled = true;
                 });
 
-                if (postPreviewObj != null) {
-                    postPreviewObj.destroy();
-                }
+                this.postPreviewObj.active = false;
 
                 selected = false;
             }

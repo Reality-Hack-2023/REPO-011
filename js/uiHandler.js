@@ -1,5 +1,3 @@
-import { planets, currentlyClicked } from './html-ui.js'
-
 class CanvasKeyboard{
     constructor( width, canvasui, lang = "EN" ){
         const config = this.getConfig( lang );
@@ -1094,7 +1092,7 @@ WL.registerComponent('uiHandler', {
         const content = {
             main: "test text",
         }
-        
+
         this.setPost = (p) => {
             content.main = p
         }

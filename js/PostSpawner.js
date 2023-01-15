@@ -16,7 +16,7 @@ WL.registerComponent('PostSpawner', {
         console.log('init() with param', this.param);
     },
     start: function() {//add all textures
-        
+        this.postPreviewObj.active = false;
         console.log('start() with param', this.param);
             // setTimeout recursively to make sure it waits for the last request to finish
             let updatePosts;
