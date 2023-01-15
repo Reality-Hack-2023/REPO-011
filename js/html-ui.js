@@ -1,4 +1,4 @@
-import './firestore-api.js';
+import { getPosts, newPost, newComment, newLikes, db } from './firestore-api.js';
 
 const HTMLCode = `
 <style>
@@ -8,7 +8,7 @@ h2 {
   color: white;
 }
 
-.comment_button {
+.post_button {
   position: relative;
   border: none;
   border-radius: 45px;
@@ -30,7 +30,7 @@ h2 {
 } 
 
 
-.comment_button:after {
+.post_button:after {
   content: "";
   position: absolute;
   padding-top: 300%;
@@ -40,90 +40,82 @@ h2 {
   opacity: 0;
 }
 
-.comment_button:active {
+.post_button:active {
   transform: translateY(-3px);
   background-color: #bbb;
-}
-
-.comment_button:active:after {
-  padding: 0;
-  margin: 0;
-  opacity: 1;
-  transition: 0s
-}
-
-.like_button {
-  position: relative;
-  background-color: #EFAAC4;
-  border: none;
-  font-size: 12px;
-  color: #000;
-  padding: 20px 10px;
-  width: 70px;
-  text-align: center;
-  test-transform: uppercase; 
-  letter-spacing 3px:
-  font-weight: 500px; 
-  transition-duration: all 0.3s ease 0;
-  text-decoration: none;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.like_button:after {
-  content: "";
-  display: block;
-  position: absolute;
-  padding-top: 300%;
-  padding-left: 350%;
-  margin-left: -20px;
-  margin-top: -120%;
-  opacity: 0;
-  transition: all 0.8s
-}
-
-.like_button:active:after {
-  padding: 0;
-  margin: 0;
-  opacity: 1;
-  transform: translateY(-2px);
-}
-
-.post_button {
-  position: relative;
-  background-color: #96C0B7;
-  border: none;
-  font-size: 12px;
-  color: #000;
-  padding: 20px 10px;
-  width: 70px;
-  text-align: center;
-  test-transform: uppercase; 
-  letter-spacing 3px:
-  font-weight: 500px; 
-  transition-duration: all 0.3s ease 0;
-  text-decoration: none;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.post_button:after {
-  content: "";
-  display: block;
-  position: absolute;
-  padding-top: 300%;
-  padding-left: 350%;
-  margin-left: -20px;
-  margin-top: -120%;
-  opacity: 0;
-  transition: all 0.8s
 }
 
 .post_button:active:after {
   padding: 0;
   margin: 0;
   opacity: 1;
-  transform: translateY(-2px);
+  transition: 0s
+}
+
+.active_button {
+  position: relative;
+  border: none;
+  border-radius: 45px;
+  font-size: 12px; 
+  color: #000;
+  background-color: #fff;
+  padding: 10px 21px; 
+  width: 60px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 400;
+  overflow: hidden;
+
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer; 
+  outline: none;
+} 
+
+
+.active_button:after {
+  content: "";
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px !important;
+  margin-top: -120%;
+  opacity: 0;
+}
+
+.active_button:active {
+  transform: translateY(-3px);
+  background-color: #bbb;
+}
+
+.active_button:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
+}
+
+.inactive_button {
+  position: relative;
+  border: none;
+  border-radius: 45px;
+  font-size: 12px; 
+  color: #000;
+  background-color: #fff;
+  padding: 10px 21px; 
+  width: 60px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 400;
+  overflow: hidden;
+  opacity: 0.4;
+
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer; 
+  outline: none;
 }
 
 .content {
@@ -212,23 +204,23 @@ input:focus ~ .input-border {
     <input class="input" placeholder="Enter your name" id="author" name="author" required>
     <br>
     <label for="text">Text:</label>
-    <textarea class="input" Placeholder="Type here" name="text" required></textarea>
+    <textarea class="input" Placeholder="Type here" name="text" id="text" required></textarea>
     <br>
-    <button type="submit" id="submit-button" onclick="closeForm();newPost(author, text)">Submit</button>
+    <button type="button" id="submit-button" onclick="closeForm()">Submit</button>
   </form>
 </div>
 
 <div class='button-container'>
   <div class='content'>
-  <button class="comment_button"><i class="fas fa-comment"></i></button>
+  <button class="inactive_button" disabled><i class="fas fa-comment"></i></button>
   </div>
 
   <div class='content'>
-  <button class="comment_button"><i class="fas fa-heart"></i></button>
+  <button class="inactive_button" disabled><i class="fas fa-heart"></i></button>
   </div>
 
   <div class='content'>
-  <button class="comment_button" onclick="openForm()"><i class="fas fa-pen"></i></button>
+  <button class="post_button" onclick="openForm()"><i class="fas fa-pen"></i></button>
   </div>
 </div>
 `
@@ -238,6 +230,7 @@ window.openForm = function() {
 
 window.closeForm = function() {
   document.getElementById("post-form").style.display = "none";
+  newPost(db, document.getElementById("author").value, document.getElementById("text").value);
 }
 
 WL.registerComponent('html-ui', {
