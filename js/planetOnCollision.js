@@ -37,7 +37,7 @@ WL.registerComponent('planetOnCollision', {
 
                 selected = true;
             } else {
-                var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
+                var newMesh = this.object.getComponent("mesh");
                 newMesh.material = this.material_org;
 
                 var allActiveButtons = document.querySelectorAll(".active_button");
