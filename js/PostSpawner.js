@@ -40,11 +40,19 @@ WL.registerComponent('PostSpawner', {
 
                             if (planets.length == 0)
                                 newObj.translateWorld = this.object.translateWorld;
-                            else
-                                newObj.setTranslationWorld([0,0.5,0]);
+                            else{
+                                //TESTING
+                                const minAngle = 0;
+                                const maxAngle = -180;
+                                const angle = Math.random() * (maxAngle - minAngle) + minAngle;
+                                const x = Math.cos(angle) * 10;
+                                const y = Math.sin(angle) * 10;
+                                newObj.setTranslationWorld([Math.abs(x),Math.abs(Math.floor(Math.random() * 7)),-Math.abs(y)]);
+                                //TESTING
+                                //newObj.setTranslationWorld([Math.floor(Math.random() * 12),Math.abs(Math.floor(Math.random() * 6)),Math.floor(Math.random() * 10)-12]);
+                            }
                             newObj.addComponent("planetRotation");
                             console.log(newObj.transformLocal);
-
                             planets.set(post.ref.id, {data: post.data(), object: newObj});
 
                             console.log('PostSpawner: ', newObj.getComponent('planetPostInfo').planet_id);
