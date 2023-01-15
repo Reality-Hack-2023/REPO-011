@@ -14367,14 +14367,10 @@
 
   // js/planetOnCollision.js
   var planetOnCollision_exports = {};
-  __export(planetOnCollision_exports, {
-    planet_identifier: () => planet_identifier
-  });
-  var planet_identifier, postPreviewObj;
+  var postPreviewObj;
   var init_planetOnCollision = __esm({
     "js/planetOnCollision.js"() {
       init_html_ui();
-      planet_identifier = null;
       postPreviewObj = null;
       WL.registerComponent("planetOnCollision", {
         material_org: { type: WL.Type.Material },
@@ -14392,7 +14388,7 @@
             if (!selected) {
               find_planet = this.object.getComponent("planetPostInfo");
               if (find_planet != null) {
-                planet_identifier = find_planet.planet_id;
+                currentlyClicked.clicked = find_planet.planet_id;
               }
               var newMesh = this.object.children[0].children[0].children[0].children[0].getComponent("mesh");
               newMesh.material = this.material_change;
@@ -14430,7 +14426,11 @@
 
   // js/html-ui.js
   var html_ui_exports = {};
-  var HTMLCode;
+  __export(html_ui_exports, {
+    currentlyClicked: () => currentlyClicked,
+    planets: () => planets
+  });
+  var HTMLCode, planets, currentlyClicked;
   var init_html_ui = __esm({
     "js/html-ui.js"() {
       init_firestore_api();
@@ -14669,6 +14669,8 @@ input:focus ~ .input-border {
   </div>
 </div>
 `;
+      planets = /* @__PURE__ */ new Map();
+      currentlyClicked = { clicked: null };
       window.openPost = function() {
         document.getElementById("post-form").style.display = "block";
       };
@@ -14679,20 +14681,20 @@ input:focus ~ .input-border {
       window.closePost = function() {
         document.getElementById("post-form").style.display = "none";
       };
-      window.likePost = function() {
-        if (planet_identifier != null) {
-          newLikes(db, planet_identifier);
-        }
-      };
       window.openComment = function() {
-        if (planet_identifier != null) {
-          document.getElementById("comment-form").style.display = "block";
+        document.getElementById("comment-form").style.display = "block";
+      };
+      window.submitComment = function() {
+        document.getElementById("comment-form").style.display = "none";
+        if (currentlyClicked) {
+          newComment(db, currentlyClicked, document.getElementById("comment").value);
+        } else {
+          console.error("No plannet is clicked, how did u get here???");
         }
       };
-      window.closeComment = function() {
-        if (planet_identifier != null) {
-          document.getElementById("comment-form").style.display = "none";
-          newComment(db, planet_identifier, document.getElementById("comment").value);
+      window.likePost = function() {
+        if (void 0 != null) {
+          newLikes(db, void 0);
         }
       };
       WL.registerComponent("html-ui", {}, {
@@ -17161,14 +17163,14 @@ input:focus ~ .input-border {
 
   // js/PostSpawner.js
   var PostSpawner_exports = {};
-  var planets;
   var init_PostSpawner = __esm({
     "js/PostSpawner.js"() {
       init_index_esm2017();
       init_api();
       init_firestore_api();
-      planets = /* @__PURE__ */ new Map();
+      init_html_ui();
       WL.registerComponent("PostSpawner", {
+        size: { type: WL.Type.Float, default: 1 },
         mesh: { type: WL.Type.Mesh },
         material: { type: WL.Type.Material },
         moon_mesh: { type: WL.Type.Mesh },
@@ -17186,7 +17188,10 @@ input:focus ~ .input-border {
               posts.forEach((post) => {
                 if (!planets.has(post.ref.id)) {
                   var newObj = WL.scene.addObject();
+                  this.size = 1 + (post.data().likes + post.data().comments.length) * 0.01;
+                  newObj.scale([this.size, this.size, this.size]);
                   var newMesh = newObj.addComponent("mesh");
+                  var newCollision = newObj.addComponent("collision", { extents: [this.size, this.size, this.size], collider: Collider.Sphere, group: 1 });
                   var newInfo = newObj.addComponent("planetPostInfo");
                   newObj.addComponent("planetOnCollision");
                   newMesh.mesh = this.mesh;
@@ -17204,16 +17209,14 @@ input:focus ~ .input-border {
                     moonMesh.material = this.moon_material;
                     moonObj.addComponent("moonRotation", { speed: 360 * Math.random() });
                   });
-                  if (planets.length == 0)
-                    newObj.translateWorld = this.object.translateWorld;
-                  else {
+                  do {
                     const minAngle = 0;
                     const maxAngle = -180;
                     const angle = Math.random() * (maxAngle - minAngle) + minAngle;
                     const x2 = Math.cos(angle) * 10;
                     const y2 = Math.sin(angle) * 10;
                     newObj.setTranslationWorld([Math.abs(x2), Math.abs(Math.floor(Math.random() * 7)), -Math.abs(y2)]);
-                  }
+                  } while (newObj.getComponent("collision").queryOverlaps().length != 0);
                   newObj.addComponent("planetRotation");
                   console.log(newObj.transformLocal);
                   planets.set(post.ref.id, { data: post.data(), object: newObj });
@@ -18375,7 +18378,7 @@ input:focus ~ .input-border {
             }
           };
           const content = {
-            main: (void 0)[void 0].data.text
+            main: planets[currentlyClicked].data.text
           };
           this.ui = new CanvasUI(content, config, this.object);
           this.ui.update();
