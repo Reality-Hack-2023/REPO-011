@@ -14314,15 +14314,12 @@
     getPosts: () => getPosts,
     newComment: () => newComment,
     newLikes: () => newLikes,
-    newPost: () => newPost,
-    posts_list: () => posts_list
+    newPost: () => newPost
   });
   async function getPosts(db2) {
-    const posts = Nn(db2, "posts");
-    const postsSnapshot = await zr(posts);
-    const postsList = postsSnapshot.docs.map((doc) => doc.data());
-    posts_list = postsList;
-    return posts_list;
+    const posts = Nn(db2, "/posts");
+    postsSnapshot = await zr(posts);
+    return postsSnapshot.docs;
   }
   async function newPost(db2, author, text) {
     const postRef = await Yr(Nn(db2, "posts"), {
@@ -14348,7 +14345,7 @@
       likes: increment(1)
     });
   }
-  var firebaseConfig, app, db, posts_list;
+  var firebaseConfig, app, db;
   var init_firestore_api = __esm({
     "js/firestore-api.js"() {
       init_index_esm();
@@ -14365,7 +14362,6 @@
       };
       app = initializeApp(firebaseConfig);
       db = bn(app);
-      posts_list = null;
     }
   });
 
@@ -14518,6 +14514,61 @@ h2 {
   bottom: 0;
   width: 100%;
 }
+.postForm {
+  
+  border-radius: 1px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  transition: all 0.2s ease-in-out;
+  position: absolute; 
+
+  --width-of-input: 200px;
+  --border-height: 1px; 
+  --border-before-color: #C8D3D5;
+  --border-after-color: #628F93; 
+    width: var(--width-of-input);  
+
+  top: 25%;  /* center the form vertically */
+  left: 50%; /* center the form horizontally */
+  transform: translate(-50%, -50%); /* adjust the position */
+}
+
+
+/* styling of Input */
+.input {
+ color: #fff;
+ font-size: 0.9rem;
+ background-color: transparent;
+ width: 100%;
+ box-sizing: border-box;
+ padding-inline: 0.5em;
+ padding-block: 0.7em;
+ border: none;
+ border-bottom: var(--border-height) solid var(--border-before-color);
+}
+
+/* styling of animated border */
+.input-border {
+ position: absolute;
+ background: var(--border-after-color);
+ width: 0%;
+ height: 2px;
+ bottom: 0;
+ left: 0;
+ transition: 0.3s;
+}
+
+/* Hover on Input */
+input:hover {
+ background: var(--input-hovered-color);
+}
+
+input:focus {
+ outline: none;
+}
+/* here is code of animated border */
+input:focus ~ .input-border {
+ width: 100%;
+}
 
 /* We disable "pointer-events" on the parent, because it needs to
  * let through any events to the canvas. But for any direct children
@@ -14526,21 +14577,38 @@ h2 {
   pointer-events: auto;
 }
 </style>
+<div id="post-form" style="display: none;" class='content postForm'>
+  <form>
+    <label for="author">Author:</label>
+    <input class="input" placeholder="Enter your name" id="author" name="author" required>
+    <br>
+    <label for="text">Text:</label>
+    <textarea class="input" Placeholder="Type here" name="text" required></textarea>
+    <br>
+    <button type="submit" id="submit-button" onclick="closeForm();newPost(author, text)">Submit</button>
+  </form>
+</div>
 
 <div class='button-container'>
   <div class='content'>
-      <button class="comment_button" onclick="newComment()"><i class="fas fa-comment"></i></button>
+  <button class="comment_button"><i class="fas fa-comment"></i></button>
   </div>
 
   <div class='content'>
-      <button class="comment_button" onclick="newLikes()"><i class="fas fa-heart"></i></button>
+  <button class="comment_button"><i class="fas fa-heart"></i></button>
   </div>
 
   <div class='content'>
-      <button class="comment_button" onclick="newPost()"><i class="fas fa-pen"></i></button>
+  <button class="comment_button" onclick="openForm()"><i class="fas fa-pen"></i></button>
   </div>
 </div>
 `;
+      window.openForm = function() {
+        document.getElementById("post-form").style.display = "block";
+      };
+      window.closeForm = function() {
+        document.getElementById("post-form").style.display = "none";
+      };
       WL.registerComponent("html-ui", {}, {
         start: function() {
           const div = document.createElement("div");
@@ -14559,40 +14627,64 @@ h2 {
 
   // js/PostSpawner.js
   var PostSpawner_exports = {};
-  var spheres;
+  var planets;
   var init_PostSpawner = __esm({
     "js/PostSpawner.js"() {
+      init_index_esm2017();
       init_firestore_api();
-      spheres = [];
+      planets = /* @__PURE__ */ new Map();
       WL.registerComponent("PostSpawner", {
-        param: { type: WL.Type.Float, default: 1 }
+        mesh: { type: WL.Type.Mesh },
+        material: { type: WL.Type.Material }
       }, {
         init: function() {
           console.log("init() with param", this.param);
         },
         start: function() {
           console.log("start() with param", this.param);
-          getPosts(db).then(console.log);
-          async function callGetPosts(db2) {
-            setInterval(async () => {
-              const posts = await getPosts(db2);
-              for (let i = 0; i < posts_list.length; ++i) {
-                console.log(posts);
-                var newObj = WL.scene.addObject();
-                var newMesh = newObj.addComponent("mesh");
-                newMesh.mesh = this.mesh;
-                newMesh.material = this.material;
-                if (spheres.length == 0)
-                  newObj.translateWorld = this.object.translateWorld;
-                else
-                  newObj.setTranslationWorld(glMatrix.vec3.add([], spheres[spheres.length - 1].getTranslationWorld([]), [1.5, 0, 0]));
-                newObj.addComponent("planetRotation");
-                spheres.push(newObj);
-                console.log(newObj.transformLocal);
-              }
-            }, 5e3);
-          }
-          callGetPosts();
+          let updatePosts;
+          updatePosts = () => {
+            getPosts(db).then((posts) => {
+              console.log("YO", posts);
+              posts.forEach((post) => {
+                if (!planets.has(post.ref.id)) {
+                  var newObj = WL.scene.addObject();
+                  var newMesh = newObj.addComponent("mesh");
+                  var newInfo = newObj.addComponent("planetPostInfo");
+                  newMesh.mesh = this.mesh;
+                  newMesh.material = this.material;
+                  newInfo.planet_id = post.ref.id;
+                  if (planets.length == 0)
+                    newObj.translateWorld = this.object.translateWorld;
+                  else
+                    newObj.setTranslationWorld([0, 0.5, 0]);
+                  newObj.addComponent("planetRotation");
+                  console.log(newObj.transformLocal);
+                  planets.set(post.ref.id, { data: post.data(), object: newObj });
+                  console.log("PostSpawner: ", newObj.getComponent("planetPostInfo").planet_id);
+                }
+              });
+              setTimeout(updatePosts, 5e3);
+            });
+          };
+          updatePosts();
+        },
+        update: function(dt2) {
+        }
+      });
+    }
+  });
+
+  // js/planetPostInfo.js
+  var require_planetPostInfo = __commonJS({
+    "js/planetPostInfo.js"() {
+      WL.registerComponent("planetPostInfo", {
+        planet_id: { type: WL.Type.String, default: "" }
+      }, {
+        init: function() {
+        },
+        start: function() {
+          console.log("New Planet Spawned: ", this.planet_id);
         },
         update: function(dt2) {
         }
@@ -14643,48 +14735,15 @@ h2 {
     }
   });
 
-  // js/planetSpawner.js
-  var require_planetSpawner = __commonJS({
-    "js/planetSpawner.js"() {
-      var spheres2 = [];
-      WL.registerComponent("planetSpawner", {
-        mesh: { type: WL.Type.Mesh },
-        material: { type: WL.Type.Material }
-      }, {
-        init: function() {
-          console.log("init() with param", this.param);
-        },
-        start: function() {
-          var cursor = this.object.getComponent("cursor-target");
-          cursor.addClickFunction((o) => {
-            var newObj = WL.scene.addObject();
-            var newMesh = newObj.addComponent("mesh");
-            newMesh.mesh = this.mesh;
-            newMesh.material = this.material;
-            if (spheres2.length == 0)
-              newObj.translateWorld = this.object.translateWorld;
-            else
-              newObj.setTranslationWorld(glMatrix.vec3.add([], spheres2[spheres2.length - 1].getTranslationWorld([]), [1.5, 0, 0]));
-            newObj.addComponent("planetRotation");
-            spheres2.push(newObj);
-            console.log(newObj.transformLocal);
-          });
-        },
-        update: function(dt2) {
-        }
-      });
-    }
-  });
-
   // js/bundle.js
   require_thwall_camera();
   require_components();
   init_firestore_api();
   init_html_ui();
   init_PostSpawner();
+  require_planetPostInfo();
   require_planetRotation();
   require_planetOnCollision();
-  require_planetSpawner();
 })();
 /*! Bundled license information:
 

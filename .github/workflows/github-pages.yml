@@ -13,7 +13,7 @@ jobs:
     - name: Package
       run: |
         chmod +x /usr/local/bin/node
-        mv /usr/local/share/wonderlandengine/node_modules /usr/local/bin/node_modules
+        cp -r /usr/local/share/wonderlandengine/node_modules /usr/local/bin/node_modules
         chmod +x /usr/local/bin/node_modules/npm/bin/npm
         /usr/local/bin/node_modules/npm/bin/npm install
         /usr/local/bin/entrypoint.sh WonderlandEditor --windowless --package --project TestAR.wlp --credentials "$WLE_CREDENTIALS" && touch time.txt 

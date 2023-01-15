@@ -1,34 +1,47 @@
-import { getPosts, newPost, newComment, newLikes, db,posts_list } from './firestore-api.js'
-var spheres = [];
+import { map } from '@firebase/util';
+import { getPosts, newPost, newComment, newLikes, db } from './firestore-api.js'
+var planets = new Map();
 WL.registerComponent('PostSpawner', {
-    param: {type: WL.Type.Float, default: 1.0},
+    mesh: {type: WL.Type.Mesh},
+    material: {type: WL.Type.Material},
 }, {
     init: function() {
         console.log('init() with param', this.param);
     },
     start: function() {
         console.log('start() with param', this.param);
-        getPosts(db).then(console.log);
-        async function callGetPosts(db) {
-            setInterval(async () => {
-                const posts = await getPosts(db);
-                for (let i = 0; i < posts_list.length; ++i){
-                    console.log(posts);
-                var newObj = WL.scene.addObject();
-                var newMesh = newObj.addComponent("mesh");
-                newMesh.mesh = this.mesh;
-                newMesh.material = this.material;
-                if (spheres.length == 0)
-                    newObj.translateWorld = this.object.translateWorld;
-                else
-                    newObj.setTranslationWorld(glMatrix.vec3.add([], spheres[spheres.length-1].getTranslationWorld([]), [1.5, 0, 0]));
-                newObj.addComponent("planetRotation");
-                spheres.push(newObj);
-                console.log(newObj.transformLocal);
+            // setTimeout recursively to make sure it waits for the last request to finish
+            let updatePosts;
+            updatePosts = () => {
+                getPosts(db).then((posts) => {
+                    console.log("YO", posts)
+                    posts.forEach(post => {
+                        if(!planets.has(post.ref.id)){
+                            
+                            var newObj = WL.scene.addObject();
+                            var newMesh = newObj.addComponent("mesh");
+                            var newInfo = newObj.addComponent("planetPostInfo")
+                            
+                            newMesh.mesh = this.mesh;
+                            newMesh.material = this.material;
+                            newInfo.planet_id = post.ref.id;
+
+                            if (planets.length == 0)
+                                newObj.translateWorld = this.object.translateWorld;
+                            else
+                                newObj.setTranslationWorld([0,0.5,0]);
+                            newObj.addComponent("planetRotation");
+                            console.log(newObj.transformLocal);
+
+                            planets.set(post.ref.id, {data: post.data(), object: newObj});
+
+                            console.log('PostSpawner: ', newObj.getComponent('planetPostInfo').planet_id);
+                        }
+                    });
+                    setTimeout(updatePosts, 5000);
+                })
             }
-            }, 5000);
-          }
-        callGetPosts()
+            updatePosts();
     },
     update: function(dt) {
     },
